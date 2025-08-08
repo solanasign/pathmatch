@@ -2,20 +2,21 @@ import React from 'react';
 import { videoSrc } from '../assets/images';
 import EmployerServices from '../components/EmployerServices';
 import JobSeekerServices from '../components/JobSeekerServices';
+import Footer from '../components/Footer';
 
 const Employers: React.FC = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <div className="w-full max-w-4xl mx-auto py-2 flex-1 pt-40">
+      <div className="w-full max-w-4xl mx-auto py-2 flex-1 pt-24">
         {/* Hero Section */}
-        <h1 className="text-3xl md:text-4xl font-bold text-black text-center mb-6">Welcome To The Employers Section Of PathMatch!</h1>
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-red-500 text-center mb-4">Welcome To The Employers Section Of PathMatch!</h1>
         <p className="text-lg text-zinc-800 text-center mb-10">
           We understand that finding the right talent is crucial to the success of your organization. At PathMatch, we are dedicated to providing businesses with customized recruitment solutions that connect you with top-tier candidates who fit your unique needs.
         </p>
         <div className="cta-buttons flex flex-col sm:flex-row justify-center gap-4 mb-10">
           <a
             href="/job-seekers"
-            className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+            className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 text-center"
             role="button"
             tabIndex={0}
           >
@@ -23,7 +24,7 @@ const Employers: React.FC = () => {
           </a>
             <a
               href="/signup"
-              className="bg-white text-black px-6 py-3 rounded-lg font-semibold border border-black hover:bg-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+              className="bg-white text-red-500 px-6 py-3 rounded-lg font-semibold border border-red-500 hover:bg-red-600 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
               role="button"
               tabIndex={0}
             >
@@ -125,14 +126,7 @@ const Employers: React.FC = () => {
         {/* Job Seeker Services Section */}
         <JobSeekerServices />
       </div>
-      <footer className="w-full bg-neutral-900 py-8 px-10 flex flex-col items-center justify-center mt-auto">
-        <p className="text-gray-400 text-sm text-center mb-4">Copyright © 2025 PathMatch- All Rights Reserved.</p>
-        <div className="flex gap-6 text-gray-300 text-sm">
-          <a href="#about" className="hover:underline hover:text-blue-400 transition-colors">About Us</a>
-          <a href="#contact" className="hover:underline hover:text-blue-400 transition-colors">Contact</a>
-          <a href="https://policies.google.com/privacy" className="hover:underline hover:text-blue-400">Privacy Policy</a>
-        </div>
-      </footer>
+      <Footer /> 
     </div>
   );
 };

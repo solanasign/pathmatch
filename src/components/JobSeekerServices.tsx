@@ -41,7 +41,7 @@ const ServiceCard: React.FC<{ service: JobSeekerService }> = ({ service }) => (
       </ul>
       <a
         href={service.cta.link}
-        className="inline-block bg-black hover:bg-blue-700 text-white px-5 py-3 rounded-md transition-colors"
+        className="inline-block bg-black hover:bg-red-700 text-white px-5 py-3 rounded-md transition-colors"
       >
         {service.cta.text}
       </a>

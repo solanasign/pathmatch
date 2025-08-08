@@ -53,7 +53,7 @@ interface ServiceCardProps {
 const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => (
   <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
     {service.icon && (
-      <div className="text-blue-600 text-3xl mb-4">
+      <div className="text-red-600 text-3xl mb-4">
         <i className={service.icon}></i>
       </div>
     )}
@@ -67,12 +67,12 @@ interface StepCardProps {
 }
 
 const StepCard: React.FC<StepCardProps> = ({ step }) => (
-  <div className="border border-gray-200 rounded-lg p-6 hover:border-blue-500 transition-colors">
+  <div className="border border-gray-200 rounded-lg p-6 hover:border-red-500 transition-colors">
     <h3 className="font-bold text-lg mb-2">{step.title}</h3>
     <p className="text-gray-600 mb-4">{step.description}</p>
     <a 
       href={step.ctaLink}
-      className="inline-block bg-black text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+      className="inline-block bg-black text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
     >
       {step.ctaText} &rarr;
     </a>
