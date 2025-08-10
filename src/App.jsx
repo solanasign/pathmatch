@@ -5,7 +5,6 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Upload from './pages/Upload';
 import VideoPlayer from './components/VideoPlayer';
-import CreatorProfile from './pages/CreatorProfile';
 import Chat from './pages/Chat';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
@@ -31,7 +30,6 @@ function App() {
           <Route path="/about-us" element={<About />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/creator" element={<CreatorProfile />} />
           
           <Route path="/video/:id" element={
             <ProtectedRoute>

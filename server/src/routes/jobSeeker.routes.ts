@@ -4,12 +4,16 @@ import {
   updateJobSeekerProfile, 
   getJobSeekerApplications 
 } from '../controllers/jobSeeker.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import { authenticate, requireJobSeeker } from '../middleware/auth.middleware';
 
 const router = Router();
 
-router.get('/:id', authenticate, getJobSeekerProfile);
-router.put('/:id', authenticate, updateJobSeekerProfile);
-router.get('/:id/applications', authenticate, getJobSeekerApplications);
+// Protected routes (job seekers only)
+// @ts-ignore
+router.get('/:id', authenticate, requireJobSeeker, getJobSeekerProfile);
+// @ts-ignore
+router.put('/:id', authenticate, requireJobSeeker, updateJobSeekerProfile);
+// @ts-ignore
+router.get('/:id/applications', authenticate, requireJobSeeker, getJobSeekerApplications);
 
 export default router;

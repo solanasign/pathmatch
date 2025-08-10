@@ -1,15 +1,81 @@
 import { Request, Response } from 'express';
 import { supabase } from '../config/db';
+import { sendAutoResponderEmail, sendNotificationEmail } from '../services/email.service';
+
+export const submitPublicApplication = async (req: Request, res: Response) => {
+  try {
+    const { job_title, applicant_name, applicant_email, cover_letter, phone } = req.body;
+    const resumeFile = req.file;
+
+    // Validate required fields
+    if (!applicant_name || !applicant_email || !job_title) {
+      res.status(400).json({ message: 'Name, email, and job title are required' });
+      return;
+    }
+
+    // Create a temporary job record or use a default job ID for public applications
+    const tempJobId = 'public-application-' + Date.now();
+
+    // Store application details (you might want to create a separate table for public applications)
+    const applicationData = {
+      job_title,
+      applicant_name,
+      applicant_email,
+      cover_letter,
+      phone,
+      resume_uploaded: !!resumeFile,
+      resume_filename: resumeFile?.originalname,
+      submitted_at: new Date().toISOString(),
+      status: 'submitted'
+    };
+
+    // For now, we'll just send emails. In a real implementation, you'd store this in a database
+    console.log('Public application received:', applicationData);
+
+    // Send auto-responder email to applicant
+    try {
+      await sendAutoResponderEmail(
+        applicant_email,
+        applicant_name,
+        job_title
+      );
+    } catch (emailError) {
+      console.error('Failed to send auto-responder email:', emailError);
+    }
+
+    // Send notification email to PATHMATCH team
+    try {
+      await sendNotificationEmail(
+        applicant_name,
+        applicant_email,
+        job_title,
+        cover_letter,
+        resumeFile
+      );
+    } catch (emailError) {
+      console.error('Failed to send notification email:', emailError);
+    }
+
+    res.status(201).json({
+      message: 'Application submitted successfully. Check your email for confirmation.',
+      application: applicationData
+    });
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 export const submitApplication = async (req: Request, res: Response) => {
   try {
-    const { job_id, cover_letter } = req.body;
+    const { job_id, cover_letter, applicant_name, applicant_email, job_title } = req.body;
     const jobSeekerId = req.user?.id;
 
     if (!jobSeekerId) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      res.status(403).json({ message: 'Unauthorized' });
+      return;
     }
 
+    // Insert application into database
     const { data, error } = await supabase
       .from('applications')
       .insert([{
@@ -21,8 +87,37 @@ export const submitApplication = async (req: Request, res: Response) => {
       .single();
 
     if (error) throw error;
-    res.status(201).json(data);
-  } catch (error) {
+
+    // Send auto-responder email to applicant
+    try {
+      await sendAutoResponderEmail(
+        applicant_email,
+        applicant_name,
+        job_title
+      );
+    } catch (emailError) {
+      console.error('Failed to send auto-responder email:', emailError);
+      // Don't fail the application submission if email fails
+    }
+
+    // Send notification email to PATHMATCH team
+    try {
+      await sendNotificationEmail(
+        applicant_name,
+        applicant_email,
+        job_title,
+        cover_letter
+      );
+    } catch (emailError) {
+      console.error('Failed to send notification email:', emailError);
+      // Don't fail the application submission if email fails
+    }
+
+    res.status(201).json({
+      ...data,
+      message: 'Application submitted successfully. Check your email for confirmation.'
+    });
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };
@@ -42,8 +137,10 @@ export const updateApplicationStatus = async (req: Request, res: Response) => {
     if (appError) throw appError;
 
     // Verify the requesting user is the employer who owns the job
-    if (req.user?.id !== application.jobs.employer_id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+    const jobData = application.jobs as any;
+    if (req.user?.id !== jobData.employer_id) {
+      res.status(403).json({ message: 'Unauthorized' });
+      return;
     }
 
     const { data, error } = await supabase
@@ -55,7 +152,7 @@ export const updateApplicationStatus = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };

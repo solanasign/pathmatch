@@ -139,9 +139,58 @@ const JobSeekers: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // handle form submission logic here
+    
+    if (!selectedJob) {
+      alert('Please select a job position first.');
+      return;
+    }
+
+    if (!form.email || !form.name) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('job_title', selectedJob.title);
+      formData.append('applicant_name', form.name);
+      formData.append('applicant_email', form.email);
+      formData.append('cover_letter', form.message || '');
+      formData.append('phone', form.phone || '');
+      
+      if (form.resume) {
+        formData.append('resume', form.resume);
+      }
+
+      const response = await fetch('/api/applications/public', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert('Application submitted successfully! Check your email for confirmation.');
+        
+        // Reset form
+        setForm({
+          name: '',
+          phone: '',
+          email: '',
+          message: '',
+          resume: null,
+        });
+        setAttachments([]);
+        setIsModalOpen(false);
+      } else {
+        const error = await response.json();
+        alert(`Error submitting application: ${error.message}`);
+      }
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('Error submitting application. Please try again.');
+    }
   };
   
   

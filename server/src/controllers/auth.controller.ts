@@ -39,7 +39,7 @@ export const register = async (req: Request, res: Response) => {
     }
 
     res.status(201).json(profileData);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };
@@ -68,7 +68,7 @@ export const login = async (req: Request, res: Response) => {
       refresh_token: data.session.refresh_token,
       user: profile,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(401).json({ message: error.message });
   }
 };
@@ -80,6 +80,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error) throw error;
+    if (!user) throw new Error('User not found');
 
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -90,7 +91,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     if (profileError) throw profileError;
 
     res.json(profile);
-  } catch (error) {
+  } catch (error: any) {
     res.status(401).json({ message: error.message });
   }
 };

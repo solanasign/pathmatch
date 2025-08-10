@@ -13,7 +13,7 @@ export const getEmployerProfile = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
 };
@@ -25,7 +25,8 @@ export const updateEmployerProfile = async (req: Request, res: Response) => {
 
     // Verify user owns this profile
     if (req.user?.id !== id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      res.status(403).json({ message: 'Unauthorized' });
+      return;
     }
 
     // Update employer profile
@@ -39,7 +40,7 @@ export const updateEmployerProfile = async (req: Request, res: Response) => {
     if (error) throw error;
 
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };
@@ -50,7 +51,8 @@ export const getEmployerJobs = async (req: Request, res: Response) => {
 
     // Verify user owns this profile
     if (req.user?.id !== id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      res.status(403).json({ message: 'Unauthorized' });
+      return;
     }
 
     const { data, error } = await supabase
@@ -60,7 +62,7 @@ export const getEmployerJobs = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };
@@ -71,7 +73,8 @@ export const getJobApplications = async (req: Request, res: Response) => {
 
     // Verify user owns this profile
     if (req.user?.id !== id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      res.status(403).json({ message: 'Unauthorized' });
+      return;
     }
 
     const { data, error } = await supabase
@@ -81,7 +84,7 @@ export const getJobApplications = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };

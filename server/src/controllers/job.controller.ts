@@ -18,7 +18,7 @@ export const getAllJobs = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };
@@ -35,7 +35,7 @@ export const getJobDetails = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
 };
@@ -46,7 +46,8 @@ export const createJob = async (req: Request, res: Response) => {
     const employerId = req.user?.id;
 
     if (!employerId) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      res.status(403).json({ message: 'Unauthorized' });
+      return;
     }
 
     const { data, error } = await supabase
@@ -66,7 +67,7 @@ export const createJob = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.status(201).json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };

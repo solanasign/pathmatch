@@ -52,7 +52,7 @@ const JobDetailsModal: React.FC<JobDetailsModalProps> = ({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold focus:outline-none z-10"
+            className="absolute top-4 right-4 text-red-400 hover:text-red-600 text-2xl font-bold focus:outline-none z-10"
             aria-label="Close modal"
           >
             ×

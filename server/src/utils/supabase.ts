@@ -1,10 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
-import { Database } from '../types/custom';
 
 const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_KEY || '';
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Helper functions
 export const uploadFile = async (bucket: string, path: string, file: File) => {

@@ -13,7 +13,7 @@ export const getJobSeekerProfile = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
 };
@@ -25,7 +25,8 @@ export const updateJobSeekerProfile = async (req: Request, res: Response) => {
 
     // Verify user owns this profile
     if (req.user?.id !== id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      res.status(403).json({ message: 'Unauthorized' });
+      return;
     }
 
     // Update job seeker profile
@@ -39,7 +40,7 @@ export const updateJobSeekerProfile = async (req: Request, res: Response) => {
     if (error) throw error;
 
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };
@@ -50,7 +51,8 @@ export const getJobSeekerApplications = async (req: Request, res: Response) => {
 
     // Verify user owns this profile
     if (req.user?.id !== id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      res.status(403).json({ message: 'Unauthorized' });
+      return;
     }
 
     const { data, error } = await supabase
@@ -60,7 +62,7 @@ export const getJobSeekerApplications = async (req: Request, res: Response) => {
 
     if (error) throw error;
     res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };

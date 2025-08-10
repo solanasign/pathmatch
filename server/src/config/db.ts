@@ -1,10 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
-import { Database } from '../types/custom';
+import dotenv from 'dotenv';
 
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_KEY || '';
+// Load environment variables
+dotenv.config();
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('SUPABASE_URL and SUPABASE_KEY must be set in environment variables');
+}
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Test connection
 supabase
