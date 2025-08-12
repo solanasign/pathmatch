@@ -738,7 +738,7 @@ const JobSeekers: React.FC = () => {
               Welcome to the Job Seekers section of PathMatch! - where your career journey begins. We're dedicated to transforming your job search into career success.
             </p>
             <div className="cta-buttons flex flex-col sm:flex-row justify-center gap-4">
-              <a href="/job-seekers" className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">Browse Jobs</a>
+              <div className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">Browse Jobs</div>
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors"
