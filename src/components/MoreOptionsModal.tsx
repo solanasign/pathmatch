@@ -45,8 +45,8 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                 <div className="flex items-center">
                   <img src={logowide} alt="New Creature in Christ Church Logo" className="w-16 h-16 object-contain" />
                   <div className="ml-4">
-                    <h1 className="text-white font-bold text-xl">NEW CREATURE IN CHRIST</h1>
-                    <p className="text-gray-300 text-sm">CHURCH</p>
+                    <h1 className="text-white font-bold text-xl">PATHMATCH</h1>
+                    <p className="text-gray-300 text-sm">Employment Agency</p>
                   </div>
                 </div>
                 <button
