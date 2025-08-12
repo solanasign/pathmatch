@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 const About = () => {
   return (
     <>
-      <section className="w-full bg-white py-12 md:py-20">
+      <section className="w-full pt-24 bg-white py-12 md:py-20">
         <div className="max-w-6xl mx-auto  px-2 sm:px-4 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left: Text */}
           <div className="space-y-6 md:space-y-8 text-center md:text-left">
