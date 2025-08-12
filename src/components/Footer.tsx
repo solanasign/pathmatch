@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
             </ul>
         </div>
         {/* Right: Contact Info */}
-        <div className="flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-start">
           <h3 className="text-white font-bold text-lg mb-3">Contact Us</h3>
           <ul className="text-white space-y-2 text-base">
             <li className="flex items-center gap-2"><svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 12.414a4 4 0 10-1.414 1.414l4.243 4.243a1 1 0 001.414-1.414z" /></svg> El Mirage, Arizona 85335</li>
