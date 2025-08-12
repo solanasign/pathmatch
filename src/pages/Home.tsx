@@ -47,7 +47,7 @@ const Home = () => {
       title: "Executive Search",
       description: "Finding C-level executives and senior management professionals for leadership roles.",
       features: ["Executive headhunting", "Leadership assessment", "Succession planning"],
-      learnMoreLink: "/services/executive-search"
+      learnMoreLink:/job-seekers"
     },
     {
       icon: (
@@ -58,7 +58,7 @@ const Home = () => {
       title: "Permanent Placement",
       description: "Full-time permanent positions across all industries and experience levels.",
       features: ["Skills matching", "Cultural fit assessment", "Career guidance"],
-      learnMoreLink: "/services/permanent-placement"
+      learnMoreLink:"/job-seekers"
     },
     {
       icon: (
@@ -69,7 +69,7 @@ const Home = () => {
       title: "Corporate Solutions",
       description: "Comprehensive recruitment solutions for businesses of all sizes.",
       features: ["Volume recruitment", "Onboarding support", "Retention strategies"],
-      learnMoreLink: "/services/corporate-solutions"
+      learnMoreLink: "/job-seekers"
     },
     {
       icon: (
@@ -80,7 +80,7 @@ const Home = () => {
       title: "Market Intelligence",
       description: "Data-driven insights into salary trends, market conditions, and talent availability.",
       features: ["Salary benchmarking", "Market analysis", "Talent mapping"],
-      learnMoreLink: "/services/market-intelligence"
+      learnMoreLink: "/job-seekers"
     },
     {
       icon: (
@@ -91,7 +91,7 @@ const Home = () => {
       title: "Contract Staffing",
       description: "Flexible staffing solutions for project-based and temporary assignments.",
       features: ["Project staffing", "Interim management", "Flexible contracts"],
-      learnMoreLink: "/services/contract-staffing"
+      learnMoreLink: "/job-seekers"
     },
     {
       icon: (
@@ -102,7 +102,7 @@ const Home = () => {
       title: "Career Consulting",
       description: "Professional career development and coaching services for job seekers.",
       features: ["Resume optimization", "Interview coaching", "Career planning"],
-      learnMoreLink: "/services/career-consulting"
+      learnMoreLink: "/job-seekers"
     }
   ];
 
