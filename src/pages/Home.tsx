@@ -56,7 +56,7 @@ const Home = () => {
             Connect Top <span className="text-red-500">Talent</span> with<br className="hidden md:block" /> Leading Companies
           </h1>
           <p className="text-lg md:text-2xl text-white text-center max-w-2xl mb-8">
-            We bridge the gap between exceptional professionals and innovative organizations. Your next career opportunity or perfect hire is just one connection away.
+            Where talent meets opportunity. We deliver strategic recruitment solutions that drive career success and business performance—partnering with professionals and employers to achieve transformative outcomes.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
         <Link
