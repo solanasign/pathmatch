@@ -3,8 +3,8 @@ import { people, team } from '../assets/images';
 import QuoteBanner from '../components/QuoteBanner';
 import React from 'react';
 import Footer from '../components/Footer';
-import ServiceCard from '../components/ServiceCard';
-import ProcessCard from '../components/ProcessCard';
+import { services } from "../components/services";
+import { processSteps } from "../components/processSteps";
 
 // FAQ data
 const faqs = [
