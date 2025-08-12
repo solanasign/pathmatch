@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
         {/* Center: Quick Links */}
-        <div className="flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-start">
           <h3 className="text-white font-bold text-lg mb-3">Quick Links</h3>
           <ul className="text-white space-y-2 text-base">
             <li><a href="/job-seekers" className="hover:text-red-400 transition-colors">Browse Jobs</a></li>
