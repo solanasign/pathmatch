@@ -276,9 +276,9 @@ const Home = () => {
 
           {/* Explore All Services Button */}
           <div className="text-center">
-            <button className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-colors text-lg">
-              Explore All Services <span className="ml-2">→</span>
-            </button>
+            <a href="/job-seekers" className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-colors text-lg">
+              Explore All Jobs <span className="ml-2">→</span>
+            </a>
           </div>
         </div>
       </section>
