@@ -2,9 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// You need to import your logo image
-import logoSrc from '../assets/images'; // Update this path
-
 interface MobileMenuModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -46,7 +43,21 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
               {/* Header with Close Button */}
               <div className="flex justify-between items-start p-6 border-b border-gray-800">
                 <div className="flex items-center">
-                  <img src={logoSrc} alt="Pathmatch Logo" className="w-16 h-16 object-contain" />
+                  <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center shadow-md">
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0a2 2 0 012 2v8a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2z"
+                      />
+                    </svg>
+                  </div>
                   <div className="ml-4">
                     <h1 className="text-white font-bold text-xl">PATHMATCH</h1>
                     <p className="text-gray-300 text-sm">Employment Agency</p>
@@ -71,8 +82,8 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                     <Link
                       to="/"
                       className={`block text-2xl font-bold transition-colors ${isActiveLink('/')
-                          ? 'text-yellow-400'
-                          : 'text-white hover:text-yellow-500'
+                        ? 'text-yellow-400'
+                        : 'text-white hover:text-yellow-500'
                         }`}
                       onClick={onClose}
                     >
@@ -81,8 +92,8 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                     <Link
                       to="/job-seekers"
                       className={`block text-2xl font-bold transition-colors ${isActiveLink('/job-seekers')
-                          ? 'text-yellow-400'
-                          : 'text-white hover:text-yellow-500'
+                        ? 'text-yellow-400'
+                        : 'text-white hover:text-yellow-500'
                         }`}
                       onClick={onClose}
                     >
@@ -91,8 +102,8 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                     <Link
                       to="/about"
                       className={`block text-2xl font-bold transition-colors ${isActiveLink('/about')
-                          ? 'text-yellow-400'
-                          : 'text-white hover:text-yellow-500'
+                        ? 'text-yellow-400'
+                        : 'text-white hover:text-yellow-500'
                         }`}
                       onClick={onClose}
                     >
@@ -101,8 +112,8 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                     <Link
                       to="/employers"
                       className={`block text-2xl font-bold transition-colors ${isActiveLink('/employers')
-                          ? 'text-yellow-400'
-                          : 'text-white hover:text-yellow-500'
+                        ? 'text-yellow-400'
+                        : 'text-white hover:text-yellow-500'
                         }`}
                       onClick={onClose}
                     >
@@ -111,8 +122,8 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                     <Link
                       to="/contact-us"
                       className={`block text-2xl font-bold transition-colors ${isActiveLink('/contact-us')
-                          ? 'text-yellow-400'
-                          : 'text-white hover:text-yellow-500'
+                        ? 'text-yellow-400'
+                        : 'text-white hover:text-yellow-500'
                         }`}
                       onClick={onClose}
                     >
