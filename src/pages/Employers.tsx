@@ -3,6 +3,7 @@ import { videoSrc } from '../assets/images';
 import EmployerServices from '../components/EmployerServices';
 import JobSeekerServices from '../components/JobSeekerServices';
 import Footer from '../components/Footer';
+import {Link} from "react-router-dom";
 
 const Employers: React.FC = () => {
   return (
@@ -14,22 +15,22 @@ const Employers: React.FC = () => {
           We understand that finding the right talent is crucial to the success of your organization. At PathMatch, we are dedicated to providing businesses with customized recruitment solutions that connect you with top-tier candidates who fit your unique needs.
         </p>
         <div className="cta-buttons flex flex-col sm:flex-row justify-center gap-4 mb-10">
-          <a
-            href="/job-seekers"
+          <Link
+            to="/job-seekers"
             className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 text-center"
             role="button"
             tabIndex={0}
           >
             Browse Jobs
-          </a>
-            <a
-              href="/signup"
+          </Link>
+            <Link
+              to="/signup"
               className="bg-white text-red-500 px-6 py-3 rounded-lg font-semibold border border-red-500 hover:bg-red-600 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
               role="button"
               tabIndex={0}
             >
               Create Profile
-            </a>
+            </Link>
         </div>
 
         {/* Video Section */}
@@ -98,13 +99,13 @@ const Employers: React.FC = () => {
         <h2 className="text-2xl font-bold text-black mb-4">Get Started</h2>
         <ul className="list-disc list-inside text-gray-700 mb-10 space-y-2">
           <li>
-            <span className="font-semibold">Submit a Job Opening:</span> Fill out our easy-to-use form to post your job vacancies directly on our platform. <a href="/job-seekers" className="text-blue-600 underline hover:text-blue-800">Job Submission Form</a>
+            <span className="font-semibold">Submit a Job Opening:</span> Fill out our easy-to-use form to post your job vacancies directly on our platform. <Link to="/job-seekers" className="text-blue-600 underline hover:text-blue-800">Job Submission Form</Link>
           </li>
           <li>
-            <span className="font-semibold">Contact Us for a Personalized Consultation:</span> Our team is here to discuss your hiring needs and explore how we can assist you in achieving your talent acquisition goals. <a href="#contact" className="text-blue-600 underline hover:text-blue-800">Contact Us</a>
+            <span className="font-semibold">Contact Us for a Personalized Consultation:</span> Our team is here to discuss your hiring needs and explore how we can assist you in achieving your talent acquisition goals. <Link to="#contact" className="text-blue-600 underline hover:text-blue-800">Contact Us</Link>
           </li>
           <li>
-            <span className="font-semibold">Explore Our Success Stories:</span> Learn how we’ve helped other companies build strong teams and meet their HR challenges. <a href="#success-stories" className="text-blue-600 underline hover:text-blue-800">Success Stories</a>
+            <span className="font-semibold">Explore Our Success Stories:</span> Learn how we’ve helped other companies build strong teams and meet their HR challenges. <Link to="#success-stories" className="text-blue-600 underline hover:text-blue-800">Success Stories</Link>
           </li>
         </ul>
 

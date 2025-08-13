@@ -1,6 +1,7 @@
 import React from 'react';
 import jobSeekerServices from '../assets/data/jobSeekerServices';
 import { JobSeekerService } from '../types/jobSeekerTypes';
+import { Link } from 'react-router-dom';
 
 const JobSeekerServices = () => {
   return (
@@ -39,12 +40,12 @@ const ServiceCard: React.FC<{ service: JobSeekerService }> = ({ service }) => (
           </li>
         ))}
       </ul>
-      <a
-        href={service.cta.link}
+      <Link
+        to={service.cta.link}
         className="inline-block bg-black hover:bg-red-700 text-white px-5 py-3 rounded-md transition-colors"
       >
         {service.cta.text}
-      </a>
+      </Link>
     </div>
   </div>
 );

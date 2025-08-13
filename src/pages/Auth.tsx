@@ -168,7 +168,7 @@ const Auth: React.FC = () => {
         </form>
         {tab === 'login' && (
           <div className="w-full text-center mt-4">
-            <a href="#" className="text-sm text-red-600 hover:underline">Forgot your password?</a>
+            <Link to="#" className="text-sm text-red-600 hover:underline">Forgot your password?</Link>
           </div>
         )}
         <div className="w-full flex items-center my-6">
@@ -178,8 +178,8 @@ const Auth: React.FC = () => {
         </div>
         <div className="w-full text-center text-xs text-gray-500">
           By signing up, you agree to our{' '}
-          <a href="#" className="text-red-600 hover:underline">Terms of Service</a> and{' '}
-          <a href="#" className="text-red-600 hover:underline">Privacy Policy</a>
+          <Link to="#" className="text-red-600 hover:underline">Terms of Service</Link> and{' '}
+          <Link to="#" className="text-red-600 hover:underline">Privacy Policy</Link>
         </div>
       </div>
     </div>

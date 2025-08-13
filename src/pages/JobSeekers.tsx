@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent, useReducer } from 'react';
+import { Link } from 'react-router-dom';
 import JobCard from "../components/JobCard"
 import JobDetailsModal from "../components/JobDetailsModal"
 import { motion, AnimatePresence } from 'framer-motion';
@@ -729,7 +730,7 @@ const JobSeekers: React.FC = () => {
                 Cancel
               </button>
               <p className="text-xs text-zinc-600 text-center mt-4">
-                This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" className="hover:underline hover:text-blue-600">Privacy Policy</a> and <a href="https://policies.google.com/terms" className="hover:underline hover:text-blue-600">Terms of Service</a> apply.
+                This site is protected by reCAPTCHA and the Google <Link to ="https://policies.google.com/privacy" className="underline hover:text-red-600">Privacy Policy</Link> and <Link to ="https://policies.google.com/terms" className="underline hover:text-red-600">Terms of Service</Link> apply.
               </p>
             </div>
           </form>
@@ -952,7 +953,7 @@ const JobSeekers: React.FC = () => {
               Join thousands of job seekers who found their dream roles through PathMatch
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-              <a href="/signup" className="bg-white text-red-500 px-6 py-3 rounded-lg hover:text-white font-semibold hover:bg-red-800 transition-colors">Get Started - It's Free</a>
+              <Link to ="/auth" className="bg-white text-red-500 px-6 py-3 rounded-lg hover:text-white font-semibold hover:bg-red-800 transition-colors">Get Started - It's Free</Link>
               <button
                 type="button"
                 className="bg-transparent text-white px-6 py-3 rounded-lg font-semibold border border-white hover:bg-white hover:text-red-800 transition-colors"

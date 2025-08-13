@@ -48,7 +48,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           className="block w-full bg-red-100 text-red-600 font-semibold rounded-lg py-2 px-0 hover:bg-red-200 hover:text-red-700 transition-colors text-center"
         >
           Learn More <span className="ml-1">→</span>
-        </a>
+        </Link>
       </div>
     </div>
   );

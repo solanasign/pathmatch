@@ -19,7 +19,7 @@ const faqs = [
       'Yes, we offer internships for college students in various industries to help them gain valuable work experience and build their professional network.',
   },
   {
-    question: 'How long does it take for PathMatch to respond to job applications?',
+    question: 'How long does it take for PM", "CRM Data AnathMatch to respond to job applications?',
     answer:
       'We typically respond to job applications within 2-3 business days and will notify you if you are selected for an interview.',
   },

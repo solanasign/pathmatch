@@ -1,6 +1,7 @@
 import React from 'react';
 import employerServices from '../assets/data/employerServices';
 import { Service, GetStartedStep } from '../types/serviceTypes';
+import { Link } from 'react-router-dom';
 
 const EmployerServices: React.FC = () => {
   return (
@@ -21,6 +22,8 @@ const EmployerServices: React.FC = () => {
             <ServiceCard key={service.id} service={service} />
           ))}
         </div>
+
+        {/* Get Started Section */}
 
         {/* Get Started Section */}
         <div className="bg-white rounded-xl shadow-lg p-8">
@@ -70,12 +73,12 @@ const StepCard: React.FC<StepCardProps> = ({ step }) => (
   <div className="border border-gray-200 rounded-lg p-6 hover:border-red-500 transition-colors">
     <h3 className="font-bold text-lg mb-2">{step.title}</h3>
     <p className="text-gray-600 mb-4">{step.description}</p>
-    <a 
-      href={step.ctaLink}
+    <Link 
+      to={step.ctaLink}
       className="inline-block bg-black text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
     >
       {step.ctaText} &rarr;
-    </a>
+    </Link>
   </div>
 );
 

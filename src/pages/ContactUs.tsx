@@ -214,7 +214,7 @@ const ContactUs: React.FC = () => {
                       <h3 className="font-semibold text-gray-800">General Inquiries</h3>
                     </div>
                     <p className="text-gray-500 text-sm mb-2">Questions about our services and general support</p>
-                    <a href="mailto:info@pathmatch.com" className="text-red-600 hover:underline text-sm">info@pathmatch.com</a>
+                    <Link to="mailto:info@pathmatch.com" className="text-red-600 hover:underline text-sm">info@pathmatch.com</Link>
                   </div>
 
                   <div className="border-b border-gray-100 pb-4">
@@ -223,7 +223,7 @@ const ContactUs: React.FC = () => {
                       <h3 className="font-semibold text-gray-800">Enterprise Sales</h3>
                     </div>
                     <p className="text-gray-500 text-sm mb-2">Custom solutions for large organizations</p>
-                    <a href="mailto:sales@pathmatch.com" className="text-red-600 hover:underline text-sm">sales@pathmatch.com</a>
+                    <Link to="mailto:sales@pathmatch.com" className="text-red-600 hover:underline text-sm">sales@pathmatch.com</Link>
                   </div>
 
                   <div>
@@ -232,7 +232,7 @@ const ContactUs: React.FC = () => {
                       <h3 className="font-semibold text-gray-800">Tech Support</h3>
                     </div>
                     <p className="text-gray-500 text-sm mb-2">Technical issues and application support</p>
-                    <a href="mailto:support@pathmatch.com" className="text-red-600 hover:underline text-sm">support@pathmatch.com</a>
+                    <Link to="mailto:support@pathmatch.com" className="text-red-600 hover:underline text-sm">support@pathmatch.com</Link>
                   </div>
                 </div>
               </div>

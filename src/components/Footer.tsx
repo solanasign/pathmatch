@@ -1,5 +1,5 @@
 import React from 'react';
-import { logoSrc } from '../assets/images';
+import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
@@ -19,25 +19,25 @@ const Footer: React.FC = () => {
             Connecting exceptional talent with leading companies. We specialize in finding the perfect match for both employers and job seekers across all industries.
           </p>
           <div className="flex gap-4 mt-2">
-            <a href="#" className="text-white hover:text-red-400 transition-colors" aria-label="LinkedIn">
+            <Link to="#" className="text-white hover:text-red-400 transition-colors" aria-label="LinkedIn">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 8a6 6 0 016 6v5a2 2 0 01-2 2H4a2 2 0 01-2-2v-5a6 6 0 016-6h8z" /><rect width="4" height="4" x="2" y="2" rx="1" /></svg>
-            </a>
-            <a href="#" className="text-white hover:text-red-400 transition-colors" aria-label="Twitter">
+            </Link>
+            <Link to="#" className="text-white hover:text-red-400 transition-colors" aria-label="Twitter">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0022.4 1c-.88.52-1.85.87-2.88 1.07A4.48 4.48 0 0016.5 0c-2.5 0-4.5 2.01-4.5 4.5 0 .35.04.69.1 1.02C7.72 5.4 4.1 3.6 1.67.9c-.38.65-.6 1.4-.6 2.2 0 1.52.77 2.86 1.95 3.65A4.48 4.48 0 01.96 6v.06c0 2.13 1.52 3.91 3.54 4.31-.37.1-.76.16-1.16.16-.28 0-.55-.03-.81-.08.56 1.74 2.18 3.01 4.1 3.05A9.01 9.01 0 010 19.54a12.8 12.8 0 006.95 2.04c8.34 0 12.9-6.91 12.9-12.9 0-.2 0-.39-.01-.58A9.22 9.22 0 0024 4.59a9.03 9.03 0 01-2.6.71z" /></svg>
-            </a>
-            <a href="#" className="text-white hover:text-red-400 transition-colors" aria-label="Facebook">
+            </Link>
+            <Link to="#" className="text-white hover:text-red-400 transition-colors" aria-label="Facebook">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M18 2h-3a4 4 0 00-4 4v3H7v4h4v8h4v-8h3l1-4h-4V6a1 1 0 011-1h3z" /></svg>
-              </a>
+              </Link>
             </div>
           </div>
         {/* Center: Quick Links */}
         <div className="flex flex-col items-start">
           <h3 className="text-white font-bold text-lg mb-3">Quick Links</h3>
           <ul className="text-white space-y-2 text-base">
-            <li><a href="/job-seekers" className="hover:text-red-400 transition-colors">Browse Jobs</a></li>
-            <li><a href="/employers" className="hover:text-red-400 transition-colors">For Employers</a></li>
-            <li><a href="/candidates" className="hover:text-red-400 transition-colors">Find Candidates</a></li>
-            <li><a href="/about-us" className="hover:text-red-400 transition-colors">About Us</a></li>
+            <li><Link to="/job-seekers" className="hover:text-red-400 transition-colors">Browse Jobs</Link></li>
+            <li><Link to="/employers" className="hover:text-red-400 transition-colors">For Employers</Link></li>
+            <li><Link to="/candidates" className="hover:text-red-400 transition-colors">Find Candidates</Link></li>
+            <li><Link to="/about-us" className="hover:text-red-400 transition-colors">About Us</Link></li>
             </ul>
         </div>
         {/* Right: Contact Info */}
@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
       <hr className="my-8 border-blue-400/30" />
       <div className="text-center text-white text-sm space-y-2">
         <div>© 2025 PATHMATCH Employment Agency. All rights reserved.</div>
-        <a href="/privacy" className="hover:text-red-400 transition-colors">Privacy Policy</a>
+        <Link to="/privacy" className="hover:text-red-400 transition-colors">Privacy Policy</Link>
       </div>
     </footer>
   );
