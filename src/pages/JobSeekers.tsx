@@ -239,7 +239,7 @@ const JobSeekers: React.FC = () => {
       location: "Remote",
       salaryRange: "$45,000 - $75,000",
       description: "Lead our marketing initiatives and drive brand awareness. You'll develop and execute marketing strategies, manage campaigns, and analyze performance metrics to optimize results. This role offers excellent growth opportunities and the chance to work with cutting-edge marketing technologies.",
-      requiredSkills: ["Digital Marketing", "SEO", "Google Analytics", "Content Strategy"],
+      requiredSkills: ["Strategic Event Planning", "SEO", "Microsoft Office", "CRM Data Analysis"],
       benefits: [
         "Health insurance",
         "Performance bonuses",
