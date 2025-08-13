@@ -233,6 +233,24 @@ const JobSeekers: React.FC = () => {
       postedTime: "1 day ago"
     },
     {
+    title: "Marketing Consultant",
+      company: "Growth Dynamics",
+      jobType: "Full-time",
+      location: "Remote",
+      salaryRange: "$45,000 - $75,000",
+      description: "Lead our marketing initiatives and drive brand awareness. You'll develop and execute marketing strategies, manage campaigns, and analyze performance metrics to optimize results. This role offers excellent growth opportunities and the chance to work with cutting-edge marketing technologies.",
+      requiredSkills: ["Digital Marketing", "SEO", "Google Analytics", "Content Strategy"],
+      benefits: [
+        "Health insurance",
+        "Performance bonuses",
+        "Remote work options",
+        "Professional development",
+        "Team events and activities",
+        "Flexible PTO"
+      ],
+      postedTime: "2 days ago"
+    },
+    {
       title: "Customer Service Agent",
       company: "Care Connect",
       jobType: "Part-time",
