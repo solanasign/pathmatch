@@ -10,7 +10,9 @@ interface MobileMenuModalProps {
 }
 
 const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, currentPath }) => {
-  const { isAuthenticated, user, logout } = useAuth();
+  // Safely use auth context with error handling
+  const authContext = useAuth();
+  const { isAuthenticated = false, user = null, logout } = authContext || {};
   const navigate = useNavigate();
 
   const isActiveLink = (href: string) => {
@@ -21,9 +23,11 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
   };
 
   const handleLogout = () => {
-    logout();
-    onClose();
-    navigate('/');
+    if (logout) {
+      logout();
+      onClose();
+      navigate('/');
+    }
   };
 
   const handleAuthNavigation = (path: string) => {

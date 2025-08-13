@@ -17,7 +17,9 @@ const Auth: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { login } = useAuth();
+  // Safely access auth context
+  const authContext = useAuth();
+  const { login } = authContext || {};
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -92,8 +94,12 @@ const Auth: React.FC = () => {
           throw new Error(loginData.message || 'Login failed');
         }
 
-        login(loginData.access_token);
-        navigate('/');
+        if (login && loginData.access_token) {
+          await login(loginData.access_token);
+          navigate('/');
+        } else {
+          throw new Error('Authentication service unavailable');
+        }
       } else {
         // Login user
         const response = await fetch('/api/auth/login', {
@@ -113,8 +119,12 @@ const Auth: React.FC = () => {
           throw new Error(data.message || 'Login failed');
         }
 
-        login(data.access_token);
-        navigate('/');
+        if (login && data.access_token) {
+          await login(data.access_token);
+          navigate('/');
+        } else {
+          throw new Error('Authentication service unavailable');
+        }
       }
     } catch (err: any) {
       console.error('Auth error:', err);
@@ -137,6 +147,7 @@ const Auth: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900 mb-1 tracking-tight">Welcome to PATHMATCH</h1>
           <p className="text-gray-500 text-sm">Sign in to your account or create a new one</p>
         </div>
+        
         {/* Tab Switcher */}
         <div className="flex w-full mb-8 rounded-lg overflow-hidden border border-gray-200">
           <button
@@ -156,6 +167,7 @@ const Auth: React.FC = () => {
             Sign Up
           </button>
         </div>
+        
         {/* Form */}
         <form className="w-full" onSubmit={handleSubmit} autoComplete="off">
           {tab === 'register' && (
@@ -180,6 +192,7 @@ const Auth: React.FC = () => {
                     onChange={handleChange}
                     className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 px-3 text-gray-700 focus:ring-2 focus:ring-red-200 focus:border-red-400"
                     autoComplete="given-name"
+                    required
                   />
                 </div>
                 <div className="flex-1">
@@ -191,6 +204,7 @@ const Auth: React.FC = () => {
                     onChange={handleChange}
                     className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 px-3 text-gray-700 focus:ring-2 focus:ring-red-200 focus:border-red-400"
                     autoComplete="family-name"
+                    required
                   />
                 </div>
               </div>
@@ -260,34 +274,37 @@ const Auth: React.FC = () => {
               </button>
             </div>
           )}
-                      <button
-              type="submit"
-              className={`w-full py-3 rounded-lg font-semibold text-white mt-2 transition-colors ${
-                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'
-              }`}
-              disabled={loading}
-            >
-              {loading 
-                ? (tab === 'login' ? 'Signing In...' : 'Creating Account...') 
-                : (tab === 'login' ? 'Sign In' : 'Create Account')
-              }
-            </button>
-            {error && (
-              <div className="w-full mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-600 text-sm text-center">{error}</p>
-              </div>
-            )}
+          <button
+            type="submit"
+            className={`w-full py-3 rounded-lg font-semibold text-white mt-2 transition-colors ${
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'
+            }`}
+            disabled={loading}
+          >
+            {loading 
+              ? (tab === 'login' ? 'Signing In...' : 'Creating Account...') 
+              : (tab === 'login' ? 'Sign In' : 'Create Account')
+            }
+          </button>
+          {error && (
+            <div className="w-full mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm text-center">{error}</p>
+            </div>
+          )}
         </form>
+        
         {tab === 'login' && (
           <div className="w-full text-center mt-4">
             <Link to="#" className="text-sm text-red-600 hover:underline">Forgot your password?</Link>
           </div>
         )}
+        
         <div className="w-full flex items-center my-6">
           <div className="flex-1 h-px bg-gray-200" />
           <span className="mx-4 text-gray-400 text-xs">or</span>
           <div className="flex-1 h-px bg-gray-200" />
         </div>
+        
         <div className="w-full text-center text-xs text-gray-500">
           By signing up, you agree to our{' '}
           <Link to="#" className="text-red-600 hover:underline">Terms of Service</Link> and{' '}
