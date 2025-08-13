@@ -9,7 +9,6 @@ interface MobileMenuModalProps {
 }
 
 const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, currentPath }) => {
-  // Helper function to check if a link is active
   const isActiveLink = (href: string) => {
     if (href === '/') {
       return currentPath === '/';
@@ -21,27 +20,27 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop with higher z-index */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black z-40"
+            className="fixed inset-0 bg-black/70 z-[60]" // Increased z-index to 60
             onClick={onClose}
           />
 
-          {/* Modal */}
+          {/* Modal with higher z-index and adjusted positioning */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed inset-0 z-50 flex items-start justify-center p-4"
+            className="fixed top-0 left-0 w-full h-full z-[70] overflow-y-auto" // Increased z-index to 70
           >
-            <div className="w-full max-w-6xl h-full bg-black text-white overflow-y-auto">
+            <div className="bg-black text-white min-h-full">
               {/* Header with Close Button */}
-              <div className="flex justify-between items-start p-6 border-b border-gray-800">
+              <div className="flex justify-between items-center p-6 border-b border-gray-800 sticky top-0 bg-black z-10">
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center shadow-md">
                     <svg
@@ -74,63 +73,55 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
               </div>
 
               {/* Main Content */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-6">
-                {/* Left Column - Main Navigation */}
-                <div className="lg:col-span-1 space-y-8">
-                  {/* Main Navigation Links */}
-                  <nav className="space-y-6">
-                    <Link
-                      to="/"
-                      className={`block text-2xl font-bold transition-colors ${isActiveLink('/')
-                        ? 'text-yellow-400'
-                        : 'text-white hover:text-yellow-500'
-                        }`}
-                      onClick={onClose}
-                    >
-                      Home
-                    </Link>
-                    <Link
-                      to="/job-seekers"
-                      className={`block text-2xl font-bold transition-colors ${isActiveLink('/job-seekers')
-                        ? 'text-yellow-400'
-                        : 'text-white hover:text-yellow-500'
-                        }`}
-                      onClick={onClose}
-                    >
-                      Job Seekers
-                    </Link>
-                    <Link
-                      to="/about"
-                      className={`block text-2xl font-bold transition-colors ${isActiveLink('/about')
-                        ? 'text-yellow-400'
-                        : 'text-white hover:text-yellow-500'
-                        }`}
-                      onClick={onClose}
-                    >
-                      About
-                    </Link>
-                    <Link
-                      to="/employers"
-                      className={`block text-2xl font-bold transition-colors ${isActiveLink('/employers')
-                        ? 'text-yellow-400'
-                        : 'text-white hover:text-yellow-500'
-                        }`}
-                      onClick={onClose}
-                    >
-                      Employers
-                    </Link>
-                    <Link
-                      to="/contact-us"
-                      className={`block text-2xl font-bold transition-colors ${isActiveLink('/contact-us')
-                        ? 'text-yellow-400'
-                        : 'text-white hover:text-yellow-500'
-                        }`}
-                      onClick={onClose}
-                    >
-                      Contact Us
-                    </Link>
-                  </nav>
-                </div>
+              <div className="p-6 space-y-8">
+                {/* Main Navigation Links */}
+                <nav className="space-y-6">
+                  <Link
+                    to="/"
+                    className={`block text-2xl font-bold transition-colors ${
+                      isActiveLink('/') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                    }`}
+                    onClick={onClose}
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    to="/job-seekers"
+                    className={`block text-2xl font-bold transition-colors ${
+                      isActiveLink('/job-seekers') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                    }`}
+                    onClick={onClose}
+                  >
+                    Job Seekers
+                  </Link>
+                  <Link
+                    to="/about"
+                    className={`block text-2xl font-bold transition-colors ${
+                      isActiveLink('/about') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                    }`}
+                    onClick={onClose}
+                  >
+                    About
+                  </Link>
+                  <Link
+                    to="/employers"
+                    className={`block text-2xl font-bold transition-colors ${
+                      isActiveLink('/employers') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                    }`}
+                    onClick={onClose}
+                  >
+                    Employers
+                  </Link>
+                  <Link
+                    to="/contact-us"
+                    className={`block text-2xl font-bold transition-colors ${
+                      isActiveLink('/contact-us') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                    }`}
+                    onClick={onClose}
+                  >
+                    Contact Us
+                  </Link>
+                </nav>
 
                 {/* Useful Links */}
                 <div>

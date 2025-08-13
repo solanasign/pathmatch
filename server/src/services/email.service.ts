@@ -1,11 +1,16 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
-// Email transporter configuration
+dotenv.config();
+
+const username = process.env.EMAIL_USER;
+const password = process.env.EMAIL_PASSWORD;
+
 const transporter = nodemailer.createTransport({
   service: 'gmail', // or your preferred email service
   auth: {
-    user: process.env.EMAIL_USER || 'info@pathmatch.com',
-    pass: process.env.EMAIL_PASSWORD || '',
+    user: process.env.EMAIL_USER || username,
+    pass: process.env.EMAIL_PASSWORD || password,
   },
 });
 
@@ -133,7 +138,7 @@ export const sendAutoResponderEmail = async (
 export const sendNotificationEmail = async (
   applicantName: string,
   applicantEmail: string,
-  jobTitle: string,
+  jobTitle: string, // <-- Added here
   coverLetter?: string,
   resumeFile?: Express.Multer.File
 ) => {

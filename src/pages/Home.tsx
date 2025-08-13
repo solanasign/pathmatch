@@ -3,8 +3,8 @@ import { people, team } from '../assets/images';
 import QuoteBanner from '../components/QuoteBanner';
 import React from 'react';
 import Footer from '../components/Footer';
-import { services } from "../components/services";
-import { processSteps } from "../components/processSteps";
+import { services, ServiceItem } from "../components/services";
+import { processSteps, ProcessCard } from "../components/processSteps";
 
 // FAQ data
 const faqs = [
@@ -48,12 +48,12 @@ const Home = () => {
           alt="People background"
           className="absolute inset-0 w-full h-full object-cover z-0"
         />
-        {/* Blue overlay */}
+        {/* Red overlay */}
         <div className="absolute inset-0 bg-red-900 bg-opacity-80 z-10" />
         {/* Content */}
         <div className="relative z-20 flex flex-col items-center justify-center w-full px-4 py-24 md:py-32">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white text-center leading-tight mb-6">
-            Connect Top <span className="text-red-500">Talent</span> with<br className="hidden md:block" /> Leading Companies
+            Connect Top <span className="text-red-600">Talent</span> with<br className="hidden md:block" /> Leading Companies
           </h1>
           <p className="text-lg md:text-2xl text-white text-center max-w-2xl mb-8">
             Where talent meets opportunity. We deliver strategic recruitment solutions that drive career success and business performance—partnering with professionals and employers to achieve transformative outcomes.
@@ -144,7 +144,7 @@ const Home = () => {
           {/* Services Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {services.map((service, index) => (
-              <ServiceCard
+              <ServiceItem
                 key={index}
                 icon={service.icon}
                 title={service.title}
@@ -176,7 +176,7 @@ const Home = () => {
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="text-center mb-16">
-            <h2 className="text-white text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+            <h2 className="text-white text-4xl md:text-5xl font-extrabold mb-6">
               Our Proven Process
             </h2>
             <p className="text-xl text-gray-100 max-w-3xl mx-auto">
