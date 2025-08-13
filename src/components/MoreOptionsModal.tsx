@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // You need to import your logo image
-import logowide from './path-to-your-logo-image.png'; // Update this path
+import logoSrc from '../assets/images'; // Update this path
 
 interface MobileMenuModalProps {
   isOpen: boolean;
@@ -46,7 +46,7 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
               {/* Header with Close Button */}
               <div className="flex justify-between items-start p-6 border-b border-gray-800">
                 <div className="flex items-center">
-                  <img src={logowide} alt="New Creature in Christ Church Logo" className="w-16 h-16 object-contain" />
+                  <img src={logoSrc} alt="Pathmatch Logo" className="w-16 h-16 object-contain" />
                   <div className="ml-4">
                     <h1 className="text-white font-bold text-xl">PATHMATCH</h1>
                     <p className="text-gray-300 text-sm">Employment Agency</p>
