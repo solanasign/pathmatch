@@ -18,35 +18,33 @@ import Auth from './pages/Auth';
 function App() {
   const location = useLocation();
   return (
-    <>
+    <AuthProvider>
       {location.pathname !== '/auth' && <AnimatedLogo />}
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/job-seekers" element={<Jobseekers />} />
-          <Route path="/employer" element={<Employers />} /> 
-          <Route path="/upload" element={ <Upload />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/about-us" element={<About />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/auth" element={<Auth />} />
-          
-          <Route path="/video/:id" element={
-            <ProtectedRoute>
-              <VideoPlayer />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/settings" element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          } />
-          {/* Fallback Routes */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AuthProvider>
-    </>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/job-seekers" element={<Jobseekers />} />
+        <Route path="/employer" element={<Employers />} /> 
+        <Route path="/upload" element={ <Upload />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/about-us" element={<About />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/auth" element={<Auth />} />
+        
+        <Route path="/video/:id" element={
+          <ProtectedRoute>
+            <VideoPlayer />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        } />
+        {/* Fallback Routes */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 

@@ -1,21 +1,42 @@
 import { jwtDecode } from 'jwt-decode';
 
-const JWT_SECRET = import.meta.env.VITE_JWT_SECRET || '1adc19bd35ecb9b5ebaac1a2bfd93c78e231fd0cabb13b99ab32a2d4a2eef885f3aa4fbb0996f7ae7067548023b93da2432a69922f1e745ee5018d764f3ede3fa72f504e3c43db2d6044963cc2eafaa949f88633c61218d1477749cb00350072fb74f8db524dd30e4ba805675f14b60393782ca1a53cd76286231d2c9d3467df';
+// Supabase JWT payload structure
+interface SupabaseJWTPayload {
+  sub: string; // user id
+  email: string;
+  role?: string;
+  exp: number;
+  iat: number;
+  aud: string;
+  iss: string;
+}
 
 export interface DecodedToken {
   userId: string;
   email: string;
-  role: 'user' | 'creator';
+  role: 'job_seeker' | 'employer' | 'admin';
+  initials?: string;
+  firstName?: string;
+  lastName?: string;
   exp: number;
   iat: number;
 }
 
-
 export const decodeToken = (token: string): DecodedToken => {
   try {
-    return jwtDecode<DecodedToken>(token);
+    const supabasePayload = jwtDecode<SupabaseJWTPayload>(token);
+    
+    // Convert Supabase payload to our DecodedToken format
+    return {
+      userId: supabasePayload.sub,
+      email: supabasePayload.email,
+      role: (supabasePayload.role as any) || 'job_seeker',
+      exp: supabasePayload.exp,
+      iat: supabasePayload.iat,
+    };
   } catch (error) {
-    throw new Error('Invalid token');
+    console.error('Token decode error:', error);
+    throw new Error('Invalid token format');
   }
 };
 
@@ -30,18 +51,51 @@ export const verifyToken = (token: string): DecodedToken => {
     
     return decoded;
   } catch (error) {
-    throw new Error('Invalid token');
+    console.error('Token verification error:', error);
+    throw new Error('Invalid or expired token');
+  }
+};
+
+export const isTokenExpired = (token: string): boolean => {
+  try {
+    const decoded = decodeToken(token);
+    const currentTime = Date.now() / 1000;
+    return decoded.exp < currentTime;
+  } catch {
+    return true; // Consider invalid tokens as expired
+  }
+};
+
+export const getTokenExpirationTime = (token: string): Date | null => {
+  try {
+    const decoded = decodeToken(token);
+    return new Date(decoded.exp * 1000);
+  } catch {
+    return null;
   }
 };
 
 export const getStoredToken = (): string | null => {
-  return localStorage.getItem('token');
+  try {
+    return localStorage.getItem('token');
+  } catch (error) {
+    console.error('Error accessing localStorage:', error);
+    return null;
+  }
 };
 
 export const setStoredToken = (token: string): void => {
-  localStorage.setItem('token', token);
+  try {
+    localStorage.setItem('token', token);
+  } catch (error) {
+    console.error('Error storing token:', error);
+  }
 };
 
 export const removeStoredToken = (): void => {
-  localStorage.removeItem('token');
+  try {
+    localStorage.removeItem('token');
+  } catch (error) {
+    console.error('Error removing token:', error);
+  }
 }; 
