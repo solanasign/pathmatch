@@ -14,7 +14,10 @@ const AnimatedLogo: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user, logout, loading } = useAuth();
+  
+  // Safely use auth context with error handling
+  const authContext = useAuth();
+  const { isAuthenticated = false, user = null, logout, loading = false } = authContext || {};
 
   // Handle Escape key & body scroll lock
   useEffect(() => {
@@ -52,9 +55,11 @@ const AnimatedLogo: React.FC = () => {
   }, [isMenuOpen, isUserMenuOpen]);
 
   const handleLogout = () => {
-    logout();
-    setIsUserMenuOpen(false);
-    navigate('/');
+    if (logout) {
+      logout();
+      setIsUserMenuOpen(false);
+      navigate('/');
+    }
   };
 
   const UserMenu = () => (

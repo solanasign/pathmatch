@@ -5,239 +5,174 @@ import { useAuth } from '../../auth/context/AuthContext';
 interface PostFormData {
   title: string;
   content: string;
+  tags: string;
   media: File[];
-  isPrivate: boolean;
-  price: number;
-  tags: string[];
 }
 
-export const PostCreator: React.FC = () => {
+const PostCreator: React.FC = () => {
   const [formData, setFormData] = useState<PostFormData>({
     title: '',
     content: '',
-    media: [],
-    isPrivate: false,
-    price: 0,
-    tags: [],
+    tags: '',
+    media: []
   });
-  const [error, setError] = useState('');
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { user } = useAuth();
+  
+  // Safely access auth context
+  const authContext = useAuth();
+  const { user } = authContext || {};
 
   const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const validFiles = files.filter(file => {
-      const isValid = file.type.startsWith('image/') || file.type.startsWith('video/');
-      const isSizeValid = file.size <= 100 * 1024 * 1024; // 100MB limit
-      return isValid && isSizeValid;
-    });
-
-    if (validFiles.length !== files.length) {
-      setError('Some files were invalid. Only images and videos up to 100MB are allowed.');
-    }
-
-    setFormData(prev => ({
-      ...prev,
-      media: [...prev.media, ...validFiles]
-    }));
-
+    setFormData(prev => ({ ...prev, media: files }));
+    
     // Create preview URLs
-    validFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrls(prev => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const removeMedia = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      media: prev.media.filter((_, i) => i !== index)
-    }));
-    setPreviewUrls(prev => prev.filter((_, i) => i !== index));
+    const urls = files.map(file => URL.createObjectURL(file));
+    setPreviewUrls(urls);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setIsSubmitting(true);
+    
+    if (!user) {
+      alert('You must be logged in to create a post');
+      return;
+    }
 
+    setIsSubmitting(true);
+    
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);
       formDataToSend.append('content', formData.content);
-      formDataToSend.append('isPrivate', String(formData.isPrivate));
-      formDataToSend.append('price', String(formData.price));
-      formDataToSend.append('tags', JSON.stringify(formData.tags));
+      formDataToSend.append('tags', formData.tags);
+      formDataToSend.append('userId', user.userId || user.id || '');
       
       formData.media.forEach((file, index) => {
-        formDataToSend.append(`media${index}`, file);
+        formDataToSend.append(`media_${index}`, file);
       });
 
-      const response = await fetch('/api/content/create-post', {
+      const response = await fetch('/api/posts', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        },
         body: formDataToSend,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
       });
 
-      if (!response.ok) {
+      if (response.ok) {
+        // Reset form
+        setFormData({ title: '', content: '', tags: '', media: [] });
+        setPreviewUrls([]);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        alert('Post created successfully!');
+      } else {
         throw new Error('Failed to create post');
       }
-
-      // Reset form
-      setFormData({
-        title: '',
-        content: '',
-        media: [],
-        isPrivate: false,
-        price: 0,
-        tags: [],
-      });
-      setPreviewUrls([]);
-      
-    } catch (err) {
-      setError('Failed to create post. Please try again.');
+    } catch (error) {
+      console.error('Error creating post:', error);
+      alert('Failed to create post. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">Create New Post</h2>
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-gray-900">Create New Post</h2>
       
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {error && (
-          <div className="bg-red-50 text-red-700 p-4 rounded-md">
-            {error}
-          </div>
-        )}
-
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
             Title
           </label>
           <input
             type="text"
+            id="title"
             value={formData.title}
             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
             Content
           </label>
           <textarea
+            id="content"
             value={formData.content}
             onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
             rows={4}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Media
+          <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
+            Tags (comma-separated)
           </label>
-          <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-            <div className="space-y-1 text-center">
-              <div className="flex text-sm text-gray-600">
-                <label
-                  htmlFor="media-upload"
-                  className="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-purple-500"
-                >
-                  <span>Upload files</span>
-                  <input
-                    id="media-upload"
-                    name="media-upload"
-                    type="file"
-                    multiple
-                    accept="image/*,video/*"
-                    className="sr-only"
-                    onChange={handleMediaChange}
-                    ref={fileInputRef}
-                  />
-                </label>
-                <p className="pl-1">or drag and drop</p>
-              </div>
-              <p className="text-xs text-gray-500">
-                Images and videos up to 100MB
-              </p>
-            </div>
-          </div>
+          <input
+            type="text"
+            id="tags"
+            value={formData.tags}
+            onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+            placeholder="e.g., react, javascript, web development"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="media" className="block text-sm font-medium text-gray-700 mb-2">
+            Media (images/videos)
+          </label>
+          <input
+            type="file"
+            id="media"
+            ref={fileInputRef}
+            multiple
+            accept="image/*,video/*"
+            onChange={handleMediaChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
         </div>
 
         {previewUrls.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             {previewUrls.map((url, index) => (
-              <div key={index} className="relative">
-                {url.startsWith('data:image') ? (
-                  <img src={url} alt={`Preview ${index}`} className="w-full h-32 object-cover rounded" />
-                ) : (
-                  <video src={url} className="w-full h-32 object-cover rounded" />
-                )}
-                <button
-                  type="button"
-                  onClick={() => removeMedia(index)}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
-                >
-                  ×
-                </button>
-              </div>
+              <img
+                key={index}
+                src={url}
+                alt={`Preview ${index + 1}`}
+                className="w-full h-32 object-cover rounded-md"
+              />
             ))}
           </div>
         )}
 
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="isPrivate"
-            checked={formData.isPrivate}
-            onChange={(e) => setFormData(prev => ({ ...prev, isPrivate: e.target.checked }))}
-            className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-          />
-          <label htmlFor="isPrivate" className="ml-2 block text-sm text-gray-900">
-            Make this post private (paid content)
-          </label>
-        </div>
+        <button
+          type="submit"
+          disabled={isSubmitting || !user}
+          className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? 'Creating Post...' : 'Create Post'}
+        </button>
 
-        {formData.isPrivate && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Price (USD)
-            </label>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.price}
-              onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) }))}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-              required
-            />
-          </div>
+        {!user && (
+          <p className="text-sm text-red-600 text-center">
+            You must be logged in to create a post.
+          </p>
         )}
-
-        <div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50"
-          >
-            {isSubmitting ? 'Creating Post...' : 'Create Post'}
-          </button>
-        </div>
       </form>
     </div>
   );
-}; 
+};
+
+export default PostCreator; 
