@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../features/auth/context/AuthContext';
 
 const Auth: React.FC = () => {
   const [tab, setTab] = useState<'login' | 'register'>('login');
-  const [role, setRole] = useState('Job Seeker');
+  const [role, setRole] = useState('job_seeker');
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -12,16 +14,114 @@ const Auth: React.FC = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError(''); // Clear error when user types
   };
 
-  const handleTab = (tab: 'login' | 'register') => setTab(tab);
+  const handleTab = (tab: 'login' | 'register') => {
+    setTab(tab);
+    setError('');
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const getInitials = (firstName: string, lastName: string): string => {
+    return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // handle login/register logic
+    setLoading(true);
+    setError('');
+
+    try {
+      if (tab === 'register') {
+        // Validation
+        if (form.password !== form.confirmPassword) {
+          throw new Error('Passwords do not match');
+        }
+        if (form.password.length < 6) {
+          throw new Error('Password must be at least 6 characters');
+        }
+        if (!form.firstName.trim() || !form.lastName.trim()) {
+          throw new Error('First name and last name are required');
+        }
+
+        // Register user
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: form.email,
+            password: form.password,
+            role,
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
+            initials: getInitials(form.firstName.trim(), form.lastName.trim()),
+          }),
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'Registration failed');
+        }
+
+        // Auto-login after registration
+        const loginResponse = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: form.email,
+            password: form.password,
+          }),
+        });
+
+        const loginData = await loginResponse.json();
+        
+        if (!loginResponse.ok) {
+          throw new Error(loginData.message || 'Login failed');
+        }
+
+        login(loginData.access_token);
+        navigate('/');
+      } else {
+        // Login user
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: form.email,
+            password: form.password,
+          }),
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'Login failed');
+        }
+
+        login(data.access_token);
+        navigate('/');
+      }
+    } catch (err: any) {
+      console.error('Auth error:', err);
+      setError(err.message || 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,12 +162,13 @@ const Auth: React.FC = () => {
             <>
               <label className="block text-sm font-medium text-gray-700 mb-1">I am a</label>
               <select
+                name="role"
                 className="w-full mb-4 rounded-lg border border-gray-200 bg-gray-50 py-2 px-3 text-gray-700 focus:ring-2 focus:ring-red-200 focus:border-red-400"
                 value={role}
-                onChange={e => setRole(e.target.value)}
+                onChange={handleChange}
               >
-                <option>Job Seeker</option>
-                <option>Employer</option>
+                <option value="job_seeker">Job Seeker</option>
+                <option value="employer">Employer</option>
               </select>
               <div className="flex flex-col md:flex-row gap-3 mb-4">
                 <div className="flex-1">
@@ -159,12 +260,23 @@ const Auth: React.FC = () => {
               </button>
             </div>
           )}
-          <button
-            type="submit"
-            className={`w-full py-3 rounded-lg font-semibold text-white mt-2 transition-colors ${tab === 'login' ? 'bg-red-600 hover:bg-red-700' : 'bg-red-600 hover:bg-red-700'}`}
-          >
-            {tab === 'login' ? 'Sign In' : 'Create Account'}
-          </button>
+                      <button
+              type="submit"
+              className={`w-full py-3 rounded-lg font-semibold text-white mt-2 transition-colors ${
+                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'
+              }`}
+              disabled={loading}
+            >
+              {loading 
+                ? (tab === 'login' ? 'Signing In...' : 'Creating Account...') 
+                : (tab === 'login' ? 'Sign In' : 'Create Account')
+              }
+            </button>
+            {error && (
+              <div className="w-full mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm text-center">{error}</p>
+              </div>
+            )}
         </form>
         {tab === 'login' && (
           <div className="w-full text-center mt-4">
