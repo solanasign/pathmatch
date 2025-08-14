@@ -9,6 +9,7 @@ import Chat from './pages/Chat';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import AnimatedLogo from './components/AnimatedLogo';
+import ScrollToTop from './components/ScrollToTop'
 import Jobseekers from "./pages/JobSeekers"
 import Employers from './pages/Employers'
 import ContactUs from './pages/ContactUs'
@@ -19,11 +20,12 @@ function App() {
   const location = useLocation();
   return (
     <AuthProvider>
+      <ScrollToTop />
       {location.pathname !== '/auth' && <AnimatedLogo />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/job-seekers" element={<Jobseekers />} />
-        <Route path="/employer" element={<Employers />} /> 
+        <Route path="/employers" element={<Employers />} /> 
         <Route path="/upload" element={ <Upload />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/about-us" element={<About />} />

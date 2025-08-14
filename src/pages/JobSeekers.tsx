@@ -51,6 +51,20 @@ const FlipModal = ({ isOpen, onClose, children, jobTitle, companyName }) => (
           <div className="pt-2 pb-1 px-1 flex-1 flex flex-col gap-4">
             {children}
           </div>
+
+          {/* Contact Information Footer */}  
+          <div className="border-t border-gray-200 pt-4 mt-4 text-center">
+            <p className="text-sm text-gray-600 mb-2">Having trouble with your application?</p>
+            <Link 
+              to="mailto:info.pathmatch@gmail.com" 
+              className="inline-flex items-center text-red-600 hover:text-red-800 font-medium transition-colors"
+            >
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+              </svg>
+              Contact us at info.pathmatch@gmail.com
+            </Link>
+          </div>
         </motion.div>
       </div>
     )}
@@ -126,6 +140,8 @@ const JobSeekers: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<any | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -654,88 +670,135 @@ const JobSeekers: React.FC = () => {
     <div className="min-h-screen flex flex-col">
 
       <FlipModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        jobTitle={selectedJob?.title || "Job Application"}
-        companyName={selectedJob?.company || ""}
-      >
-        <div className="w-full" id="job-application-form">
-          <h1 className="text-4xl md:text-5xl font-bold text-red-800 text-center mb-8">WE ARE HIRING!</h1>
-          <h2 className="text-2xl md:text-2xl text-black text-center mb-10">Join Our Team</h2>
-          <p className="text-red-600 bg-neutral-100 rounded px-4 py-2 text-center mb-8">
-            If you're interested in one of our open positions, start by applying here and attaching your resume.
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  jobTitle={selectedJob?.title || "Job Application"}
+  companyName={selectedJob?.company || ""}
+>
+  <div className="w-full" id="job-application-form">
+    {showSuccessMessage ? (
+      <div className="text-center py-8">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-4">
+          <div className="flex items-center justify-center mb-4">
+            <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-2xl font-bold text-green-800 mb-2">Application Submitted Successfully!</h3>
+          <p className="text-green-700 mb-4">
+            Thank you for applying to <strong>{selectedJob?.title}</strong> at <strong>{selectedJob?.company}</strong>.
           </p>
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg p-0 md:p-0 flex flex-col gap-4">
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={form.name}
-              onChange={handleChange}
-              className="w-full bg-gray-100 text-black px-4 py-3 rounded-none border-0 focus:ring-2 focus:ring-red-500 outline-none placeholder-gray-500"
-              autoComplete="name"
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone"
-              value={form.phone}
-              onChange={handleChange}
-              className="w-full bg-gray-100 text-black px-4 py-3 rounded-none border-0 focus:ring-2 focus:ring-red-500 outline-none placeholder-gray-500"
-              autoComplete="tel"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email*"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="w-full bg-gray-100 text-black px-4 py-3 rounded-none border-0 focus:ring-2 focus:ring-red-500 outline-none placeholder-gray-500"
-              autoComplete="email"
-            />
-            <textarea
-              name="message"
-              placeholder="Message"
-              value={form.message}
-              onChange={handleChange}
-              rows={5}
-              className="w-full bg-gray-100 text-black px-4 py-3 rounded-none border-0 focus:ring-2 focus:ring-red-500 outline-none placeholder-gray-500 resize-y"
-            />
-            <div className="flex items-center justify-between mt-2">
-              <label className="flex items-center text-gray-700 cursor-pointer">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828M7 7h.01" /></svg>
-                Attach Resume
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
-              </label>
-              <span className="text-gray-500 text-sm">Attachments ({attachments.length})</span>
-            </div>
-            <div className="mt-6 flex flex-col items-center">
-              <button
-                type="submit"
-                className="bg-red-700 text-white font-semibold px-8 py-3 rounded shadow hover:bg-red-800 transition-colors w-full max-w-xs"
-              >
-                SUBMIT APPLICATION
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="mt-2 text-red-600 hover:underline"
-              >
-                Cancel
-              </button>
-              <p className="text-xs text-zinc-600 text-center mt-4">
-                This site is protected by reCAPTCHA and the Google <Link to ="https://policies.google.com/privacy" className="underline hover:text-red-600">Privacy Policy</Link> and <Link to ="https://policies.google.com/terms" className="underline hover:text-red-600">Terms of Service</Link> apply.
-              </p>
-            </div>
-          </form>
+          <p className="text-green-600 text-sm">
+            We've sent a confirmation email to <strong>{form.email}</strong>. 
+            Our team will review your application and get back to you soon.
+          </p>
         </div>
-      </FlipModal>
+        <div className="text-sm text-gray-500">
+          This modal will close automatically in a few seconds...
+        </div>
+      </div>
+    ) : (
+      <>
+        <h1 className="text-4xl md:text-5xl font-bold text-red-800 text-center mb-8">WE ARE HIRING!</h1>
+        <h2 className="text-2xl md:text-2xl text-black text-center mb-10">Join Our Team</h2>
+        <p className="text-red-600 bg-neutral-100 rounded px-4 py-2 text-center mb-8">
+          If you're interested in one of our open positions, start by applying here and attaching your resume.
+        </p>
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg p-0 md:p-0 flex flex-col gap-4">
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={form.name}
+            onChange={handleChange}
+            className="w-full bg-gray-100 text-black px-4 py-3 rounded-none border-0 focus:ring-2 focus:ring-red-500 outline-none placeholder-gray-500"
+            autoComplete="name"
+          />
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Phone"
+            value={form.phone}
+            onChange={handleChange}
+            className="w-full bg-gray-100 text-black px-4 py-3 rounded-none border-0 focus:ring-2 focus:ring-red-500 outline-none placeholder-gray-500"
+            autoComplete="tel"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email*"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className="w-full bg-gray-100 text-black px-4 py-3 rounded-none border-0 focus:ring-2 focus:ring-red-500 outline-none placeholder-gray-500"
+            autoComplete="email"
+          />
+          <textarea
+            name="message"
+            placeholder="Message"
+            value={form.message}
+            onChange={handleChange}
+            rows={5}
+            className="w-full bg-gray-100 text-black px-4 py-3 rounded-none border-0 focus:ring-2 focus:ring-red-500 outline-none placeholder-gray-500 resize-y"
+          />
+          <div className="flex items-center justify-between mt-2">
+            <label className="flex items-center text-gray-700 cursor-pointer">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828M7 7h.01" />
+              </svg>
+              Attach Resume
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </label>
+            <span className="text-gray-500 text-sm">Attachments ({attachments.length})</span>
+          </div>
+          <div className="mt-6 flex flex-col items-center">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`font-semibold px-8 py-3 rounded shadow transition-colors w-full max-w-xs ${
+                isSubmitting 
+                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                  : 'bg-red-700 text-white hover:bg-red-800'
+              }`}
+            >
+              {isSubmitting ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  SUBMITTING...
+                </span>
+              ) : (
+                'SUBMIT APPLICATION'
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="mt-2 text-red-600 hover:underline"
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+            <p className="text-xs text-zinc-600 text-center mt-4">
+              This site is protected by reCAPTCHA and the Google{' '}
+              <Link to="https://policies.google.com/privacy" className="underline hover:text-red-600">Privacy Policy</Link>{' '}
+              and{' '}
+              <Link to="https://policies.google.com/terms" className="underline hover:text-red-600">Terms of Service</Link>{' '}
+              apply.
+            </p>
+          </div>
+        </form>
+      </>
+    )}
+  </div>
+</FlipModal>
 
       {/* Job Details Modal */}
       {selectedJob && (
@@ -752,7 +815,7 @@ const JobSeekers: React.FC = () => {
         {/* Hero Section */}
         <div className="directory-hero bg-red-50 py-10">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-4">Job Seekers</h1>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-4">Job Seekers</h1>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
               Welcome to the Job Seekers section of PathMatch! - where your career journey begins. We're dedicated to transforming your job search into career success.
             </p>

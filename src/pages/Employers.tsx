@@ -3,7 +3,8 @@ import { videoSrc } from '../assets/images';
 import EmployerServices from '../components/EmployerServices';
 import JobSeekerServices from '../components/JobSeekerServices';
 import Footer from '../components/Footer';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import HiringInfoSection from '../components/HiringInfo';
 
 const Employers: React.FC = () => {
   return (
@@ -43,57 +44,7 @@ const Employers: React.FC = () => {
             aria-label="PathMatch Introduction Video"
           />
         </div>
-
-        {/* Why Partner Section */}
-        <h2 className="text-2xl font-bold text-black mb-4">Why Partner with PathMatch?</h2>
-        <p className="text-gray-700 ml-8">
-          At PathMatch, we recognize the challenges of navigating the competitive job market and the importance of building strong teams. Our tailored approach ensures that you not only find candidates with the right skills but also those who align with your company’s culture and goals. Here’s how we can support your hiring process:
-        </p>
-
-        <div className="space-y-8 mb-12">
-          {/* 1. Tailored Recruitment Solutions */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-2">1. Tailored Recruitment Solutions</h3>
-            <p className="text-gray-700">
-              We don’t believe in one-size-fits-all. Our team takes the time to understand your specific hiring needs, crafting customized recruitment strategies that resonate with your organizational objectives. Whether you need to fill temporary roles or seek full-time talent, we have the solutions to meet your requirements.
-            </p>
-          </div>
-          {/* 2. Access to a Diverse Talent Pool */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-2">2. Access to a Diverse Talent Pool</h3>
-            <p className="text-gray-700">
-              With our extensive network and broad reach, we provide access to a diverse range of candidates across various industries. We believe that diverse teams drive innovation and success, so we focus on finding talent from different backgrounds and experiences.
-            </p>
-          </div>
-          {/* 3. Streamlined Hiring Process */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-2">3. Streamlined Hiring Process</h3>
-            <p className="text-gray-700">
-              Our expertise in recruitment allows us to manage the entire process efficiently—from sourcing candidates and conducting initial screenings to coordinating interviews and providing you with feedback. This means you can focus on what you do best: running your business.
-            </p>
-          </div>
-          {/* 4. Comprehensive Candidate Assessments */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-2">4. Comprehensive Candidate Assessments</h3>
-            <p className="text-gray-700">
-              We utilize proven assessment tools and interview techniques to evaluate candidates thoroughly. Our detailed evaluations ensure that you receive only the most qualified individuals who meet your criteria and can contribute effectively to your team.
-            </p>
-          </div>
-          {/* 5. Employer Branding Support */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-2">5. Employer Branding Support</h3>
-            <p className="text-gray-700">
-              At PathMatch, we understand that attracting top talent requires a strong employer brand. We work with you to enhance your job postings and showcase your company culture, values, and benefits to make your opportunities more appealing to candidates.
-            </p>
-          </div>
-          {/* 6. Ongoing Support and Consultation */}
-          <div>
-            <h3 className="text-xl font-semibold text-black mb-2">6. Ongoing Support and Consultation</h3>
-            <p className="text-gray-700">
-              Our partnership doesn’t end once the position is filled. We provide ongoing support to help you integrate new hires into your team successfully and offer consultation on workforce planning and employee engagement strategies.
-            </p>
-          </div>
-        </div>
+        
 
         {/* Get Started Section */}
         <h2 className="text-2xl font-bold text-black mb-4">Get Started</h2>
@@ -112,7 +63,7 @@ const Employers: React.FC = () => {
         <div className="flex justify-center mt-8">
           <button
             type="button"
-            className="bg-black text-white font-semibold px-10 py-3 rounded shadow hover:bg-gray-200 hover:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-black text-white font-semibold px-10 py-3 rounded shadow hover:bg-red-200 hover:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={() => {
               const form = document.getElementById('employer-form-section');
               if (form) form.scrollIntoView({ behavior: 'smooth' });
@@ -122,6 +73,7 @@ const Employers: React.FC = () => {
             FIND OUT MORE
           </button>
         </div>
+        <HiringInfoSection />
         {/* Employer Services Section */}
         <EmployerServices />
         {/* Job Seeker Services Section */}

@@ -121,7 +121,7 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                   <Link
                     to="/"
                     className={`block text-2xl font-bold transition-colors ${
-                      isActiveLink('/') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                      isActiveLink('/') ? 'text-red-400' : 'text-white hover:text-red-500'
                     }`}
                     onClick={onClose}
                   >
@@ -130,7 +130,7 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                   <Link
                     to="/job-seekers"
                     className={`block text-2xl font-bold transition-colors ${
-                      isActiveLink('/job-seekers') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                      isActiveLink('/job-seekers') ? 'text-red-400' : 'text-white hover:text-red-500'
                     }`}
                     onClick={onClose}
                   >
@@ -139,16 +139,16 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                   <Link
                     to="/about-us"
                     className={`block text-2xl font-bold transition-colors ${
-                      isActiveLink('/about-us') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                      isActiveLink('/about-us') ? 'text-red-400' : 'text-white hover:text-red-500'
                     }`}
                     onClick={onClose}
                   >
                     About
                   </Link>
                   <Link
-                    to="/employer"
+                    to="/employers"
                     className={`block text-2xl font-bold transition-colors ${
-                      isActiveLink('/employer') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                      isActiveLink('/employers') ? 'text-red-400' : 'text-white hover:text-red-500'
                     }`}
                     onClick={onClose}
                   >
@@ -157,7 +157,7 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                   <Link
                     to="/contact-us"
                     className={`block text-2xl font-bold transition-colors ${
-                      isActiveLink('/contact-us') ? 'text-yellow-400' : 'text-white hover:text-yellow-500'
+                      isActiveLink('/contact-us') ? 'text-red-400' : 'text-white hover:text-red-500'
                     }`}
                     onClick={onClose}
                   >
@@ -194,7 +194,7 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                     ) : (
                       <button
                         onClick={() => handleAuthNavigation('/auth')}
-                        className="flex items-center space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors w-full text-left bg-red-600 hover:bg-red-700 px-4 py-3 rounded-lg font-medium"
+                        className="flex items-center space-x-3 text-white hover:text-red-300 transition-colors w-full text-left bg-red-600 hover:bg-red-700 px-4 py-3 rounded-lg font-medium"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />

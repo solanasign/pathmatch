@@ -88,7 +88,7 @@ const employerServices: EmployerSection = {
       title: "Join Employer Network",
       description: "Get market insights and hiring trends",
       ctaText: "Subscribe Now",
-      ctaLink: "/employer"
+      ctaLink: "/employers"
     }
   ],
 

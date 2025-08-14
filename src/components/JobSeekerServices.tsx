@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const JobSeekerServices = () => {
   return (
-    <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
+    <section className="py-16 bg-gradient-to-b from-red-100 to-white">
       <div className="container mx-auto px-4">
         <header className="text-center mb-12">
           <h2 className="text-3xl font-bold text-black">
@@ -42,7 +42,7 @@ const ServiceCard: React.FC<{ service: JobSeekerService }> = ({ service }) => (
       </ul>
       <Link
         to={service.cta.link}
-        className="inline-block bg-black hover:bg-red-700 text-white px-5 py-3 rounded-md transition-colors"
+        className="inline-block bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-md transition-colors"
       >
         {service.cta.text}
       </Link>
