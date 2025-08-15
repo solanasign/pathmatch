@@ -1,9 +1,8 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { AuthProvider } from './features/auth/context/AuthContext';
-import { ProtectedRoute } from './features/auth/components/ProtectedRoute';
+import { AuthProvider } from './features/auth/AuthContext';
+import { ProtectedRoute } from './features/auth/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';
-import Upload from './pages/Upload';
 import VideoPlayer from './components/VideoPlayer';
 import Chat from './pages/Chat';
 import Settings from './pages/Settings';
@@ -26,7 +25,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/job-seekers" element={<Jobseekers />} />
         <Route path="/employers" element={<Employers />} /> 
-        <Route path="/upload" element={ <Upload />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/contact-us" element={<ContactUs />} />

@@ -12,7 +12,7 @@ const StageImage: React.FC = () => (
 );
 
 const TakeNextStepSection: React.FC = () => (
-  <section className="w-full bg-black py-12 md:py-20 lg:py-32">
+  <section className="w-full bg-red-900 py-12 md:py-20 lg:py-32">
     <div className="max-w-7xl mx-auto px-2 sm:px-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
         {/* Left Side - Text and CTA */}

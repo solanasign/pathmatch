@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { navLinks } from "../navLinks";
 import MobileMenuModal from "./MoreOptionsModal";
-import { useAuth } from "../features/auth/context/AuthContext";
+import { useAuth } from "../features/auth/AuthContext";
+
 
 interface NavLink {
   label: string;

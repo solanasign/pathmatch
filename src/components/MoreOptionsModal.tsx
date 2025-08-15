@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../features/auth/context/AuthContext';
+import { useAuth } from '../features/auth/AuthContext';
 
 interface MobileMenuModalProps {
   isOpen: boolean;
