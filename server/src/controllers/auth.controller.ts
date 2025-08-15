@@ -1,310 +1,145 @@
-import { Request, Response } from 'express';
-import { supabase } from '../config/db';
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 
-const generateInitials = (firstName: string, lastName: string): string => {
-  return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
+// Improved async wrapper
+const asyncWrapper = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await fn(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
 };
 
-export const register = async (req: Request, res: Response) => {
+// Email transporter setup
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'info.pathmatch@gmail.com',
+    pass: process.env.PATHMATCH_GMAIL_APP_PASSWORD || '',
+  },
+});
+
+interface RegistrationData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
+async function sendRegistrationEmail(data: RegistrationData): Promise<boolean> {
+  const mailOptions = {
+    from: 'info.pathmatch@gmail.com',
+    to: 'info.pathmatch@gmail.com',
+    subject: `New Registration: ${data.role === 'employer' ? 'Employer' : 'Job Seeker'}`,
+    text: `New user registration:\n\nEmail: ${data.email}\nName: ${data.firstName} ${data.lastName}\nRole: ${data.role}`,
+    html: `
+      <h2>New User Registration</h2>
+      <p><strong>Email:</strong> ${data.email}</p>
+      <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
+      <p><strong>Role:</strong> ${data.role}</p>
+    `,
+  };
+
   try {
-    const { email, password, role, firstName, lastName } = req.body;
+    await transporter.sendMail(mailOptions);
+    console.log('Registration email sent successfully');
+    return true;
+  } catch (err) {
+    console.error('Error sending registration email:', err);
+    throw new Error('Failed to send registration email');
+  }
+}
 
-    // Validation
-    if (!email || !password || !role || !firstName || !lastName) {
-      return res.status(400).json({ 
-        message: 'Email, password, role, first name, and last name are required' 
-      });
-    }
+export const register = asyncWrapper(async (req: Request, res: Response): Promise<void> => {
+  const { email, password, role, firstName, lastName } = req.body;
 
-    if (password.length < 6) {
-      return res.status(400).json({ 
-        message: 'Password must be at least 6 characters long' 
-      });
-    }
+  console.log('Registration request received:', { email, firstName, lastName, role });
 
-    const validRoles = ['job_seeker', 'employer'];
-    if (!validRoles.includes(role)) {
-      return res.status(400).json({ 
-        message: 'Role must be either job_seeker or employer' 
-      });
-    }
+  // Validate required fields
+  if (!email || !password || !firstName || !lastName || !role) {
+    res.status(400).json({ 
+      success: false,
+      message: 'All fields are required: email, password, first name, last name, and role' 
+    });
+    return;
+  }
 
-    // Generate initials
-    const initials = generateInitials(firstName.trim(), lastName.trim());
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    res.status(400).json({ 
+      success: false,
+      message: 'Please provide a valid email address' 
+    });
+    return;
+  }
 
-    // Create auth user
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: email.toLowerCase().trim(),
-      password,
+  // Password validation
+  if (password.length < 6) {
+    res.status(400).json({ 
+      success: false,
+      message: 'Password must be at least 6 characters' 
+    });
+    return;
+  }
+
+  try {
+    // Send registration email
+    const emailSent = await sendRegistrationEmail({
+      email,
+      firstName,
+      lastName,
+      role
     });
 
-    if (authError) {
-      console.error('Auth signup error:', authError);
-      return res.status(400).json({ 
-        message: authError.message || 'Failed to create user account' 
-      });
+    if (!emailSent) {
+      throw new Error('Failed to send registration email');
     }
 
-    if (!authData.user) {
-      return res.status(400).json({ 
-        message: 'Failed to create user account' 
-      });
-    }
-
-    // Create profile
-    const { data: profileData, error: profileError } = await supabase
-      .from('profiles')
-      .insert([{
-        user_id: authData.user.id,
-        role,
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        initials,
-        email: email.toLowerCase().trim(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }])
-      .select()
-      .single();
-
-    if (profileError) {
-      console.error('Profile creation error:', profileError);
-      // Clean up auth user if profile creation fails
-      await supabase.auth.admin.deleteUser(authData.user.id);
-      return res.status(400).json({ 
-        message: 'Failed to create user profile' 
-      });
-    }
-
-    // Create role-specific profile
-    try {
-      if (role === 'job_seeker') {
-        await supabase
-          .from('job_seekers')
-          .insert([{ 
-            id: profileData.id,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }]);
-      } else if (role === 'employer') {
-        await supabase
-          .from('employers')
-          .insert([{ 
-            id: profileData.id,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }]);
-      }
-    } catch (roleError) {
-      console.error('Role-specific profile creation error:', roleError);
-      // Continue without failing - role-specific profile can be created later
-    }
-
-    res.status(201).json({
-      message: 'User registered successfully',
+    // Return success response
+    res.status(200).json({
+      success: true,
+      message: 'Registration successful. Email notification sent.',
       user: {
-        id: profileData.id,
-        email: profileData.email,
-        role: profileData.role,
-        firstName: profileData.first_name,
-        lastName: profileData.last_name,
-        initials: profileData.initials,
+        email,
+        firstName,
+        lastName,
+        role
       }
     });
+
   } catch (error: any) {
     console.error('Registration error:', error);
     res.status(500).json({ 
-      message: 'Internal server error during registration' 
+      success: false,
+      message: error.message || 'Registration failed' 
     });
   }
-};
+});
 
-export const login = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
+// Dummy login endpoint (since we're not storing users)
+export const login = asyncWrapper(async (req: Request, res: Response): Promise<void> => {
+  res.status(501).json({
+    success: false,
+    message: 'Login functionality not implemented (no user storage)'
+  });
+});
 
-    // Validation
-    if (!email || !password) {
-      return res.status(400).json({ 
-        message: 'Email and password are required' 
-      });
-    }
+// Dummy current user endpoint
+export const getCurrentUser = asyncWrapper(async (req: Request, res: Response): Promise<void> => {
+  res.status(501).json({
+    success: false,
+    message: 'User retrieval not implemented (no user storage)'
+  });
+});
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email.toLowerCase().trim(),
-      password,
-    });
-
-    if (error) {
-      console.error('Auth login error:', error);
-      return res.status(401).json({ 
-        message: error.message || 'Invalid email or password' 
-      });
-    }
-
-    if (!data.user || !data.session) {
-      return res.status(401).json({ 
-        message: 'Login failed' 
-      });
-    }
-
-    // Get user profile
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', data.user.id)
-      .single();
-
-    if (profileError || !profile) {
-      console.error('Profile fetch error:', profileError);
-      return res.status(401).json({ 
-        message: 'User profile not found' 
-      });
-    }
-
-    // Ensure initials exist (for existing users who might not have them)
-    if (!profile.initials && profile.first_name && profile.last_name) {
-      const initials = generateInitials(profile.first_name, profile.last_name);
-      await supabase
-        .from('profiles')
-        .update({ 
-          initials,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', profile.id);
-      profile.initials = initials;
-    }
-
-    res.json({
-      access_token: data.session.access_token,
-      refresh_token: data.session.refresh_token,
-      expires_at: data.session.expires_at,
-      user: {
-        id: profile.id,
-        email: profile.email,
-        role: profile.role,
-        firstName: profile.first_name,
-        lastName: profile.last_name,
-        initials: profile.initials,
-      },
-    });
-  } catch (error: any) {
-    console.error('Login error:', error);
-    res.status(500).json({ 
-      message: 'Internal server error during login' 
-    });
-  }
-};
-
-export const refreshToken = async (req: Request, res: Response) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
-    }
-
-    // Use Supabase's token refresh functionality
-    const { data, error } = await supabase.auth.refreshSession({
-      refresh_token: token,
-    });
-
-    if (error || !data.session) {
-      console.error('Token refresh error:', error);
-      return res.status(401).json({ 
-        message: 'Failed to refresh token' 
-      });
-    }
-
-    // Get updated user profile
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', data.user.id)
-      .single();
-
-    if (profileError || !profile) {
-      console.error('Profile fetch error during refresh:', profileError);
-      return res.status(401).json({ 
-        message: 'User profile not found' 
-      });
-    }
-
-    res.json({
-      access_token: data.session.access_token,
-      refresh_token: data.session.refresh_token,
-      expires_at: data.session.expires_at,
-      user: {
-        id: profile.id,
-        email: profile.email,
-        role: profile.role,
-        firstName: profile.first_name,
-        lastName: profile.last_name,
-        initials: profile.initials,
-      },
-    });
-  } catch (error: any) {
-    console.error('Token refresh error:', error);
-    res.status(500).json({ 
-      message: 'Internal server error during token refresh' 
-    });
-  }
-};
-
-export const getCurrentUser = async (req: Request, res: Response) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
-    }
-
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    if (error) {
-      console.error('Token verification error:', error);
-      return res.status(401).json({ message: 'Invalid or expired token' });
-    }
-    
-    if (!user) {
-      return res.status(401).json({ message: 'User not found' });
-    }
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
-
-    if (profileError || !profile) {
-      console.error('Profile fetch error:', profileError);
-      return res.status(401).json({ message: 'User profile not found' });
-    }
-
-    // Ensure initials exist (for existing users who might not have them)
-    if (!profile.initials && profile.first_name && profile.last_name) {
-      const initials = generateInitials(profile.first_name, profile.last_name);
-      await supabase
-        .from('profiles')
-        .update({ 
-          initials,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', profile.id);
-      profile.initials = initials;
-    }
-
-    res.json({
-      id: profile.id,
-      email: profile.email,
-      role: profile.role,
-      first_name: profile.first_name,
-      last_name: profile.last_name,
-      initials: profile.initials,
-      created_at: profile.created_at,
-      updated_at: profile.updated_at,
-    });
-  } catch (error: any) {
-    console.error('Get current user error:', error);
-    res.status(500).json({ 
-      message: 'Internal server error' 
-    });
-  }
-};
+// Dummy refresh token endpoint
+export const refreshToken = asyncWrapper(async (req: Request, res: Response): Promise<void> => {
+  res.status(501).json({
+    success: false,
+    message: 'Token refresh not implemented (no user storage)'
+  });
+});

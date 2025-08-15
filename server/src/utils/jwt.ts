@@ -1,0 +1,56 @@
+import { jwtDecode } from 'jwt-decode';
+
+const JWT_SECRET = process.env.VITE_JWT_SECRET || '1adc19bd35ecb9b5ebaac1a2bfd93c78e231fd0cabb13b99ab32a2d4a2eef885f3aa4fbb0996f7ae7067548023b93da2432a69922f1e745ee5018d764f3ede3fa72f504e3c43db2d6044963cc2eafaa949f88633c61218d1477749cb00350072fb74f8db524dd30e4ba805675f14b60393782ca1a53cd76286231d2c9d3467df';
+
+export interface DecodedToken {
+  userId: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  role: 'user' | 'admin' | 'job_seeker' | 'employer';
+  exp: number;
+  iat: number;
+}
+
+
+export const decodeToken = (token: string): DecodedToken => {
+  try {
+    // First try to decode as a standard JWT
+    return jwtDecode<DecodedToken>(token);
+  } catch (error) {
+    // If that fails, try to decode as base64 (for mock tokens)
+    try {
+      const decoded = JSON.parse(atob(token));
+      return decoded as DecodedToken;
+    } catch (base64Error) {
+      throw new Error('Invalid token');
+    }
+  }
+};
+
+export const verifyToken = (token: string): DecodedToken => {
+  try {
+    const decoded = decodeToken(token);
+    const currentTime = Date.now() / 1000;
+    
+    if (decoded.exp < currentTime) {
+      throw new Error('Token has expired');
+    }
+    
+    return decoded;
+  } catch (error) {
+    throw new Error('Invalid token');
+  }
+};
+
+export const getStoredToken = (): string | null => {
+  return localStorage.getItem('token');
+};
+
+export const setStoredToken = (token: string): void => {
+  localStorage.setItem('token', token);
+};
+
+export const removeStoredToken = (): void => {
+  localStorage.removeItem('token');
+}; 

@@ -4,7 +4,7 @@ import {
   updateEmployerProfile, 
   getEmployerJobs,
   getJobApplications
-} from '../controllers/employers.controller';
+} from '../controllers/employer.controller';
 import { authenticate, requireEmployerOrAdmin } from '../middleware/auth.middleware';
 
 const router = Router();
