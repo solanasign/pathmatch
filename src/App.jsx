@@ -3,7 +3,6 @@ import { AuthProvider } from './features/auth/AuthContext';
 import { ProtectedRoute } from './features/auth/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';
-import VideoPlayer from './components/VideoPlayer';
 import Chat from './pages/Chat';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
@@ -30,11 +29,7 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/auth" element={<Auth />} />
         
-        <Route path="/video/:id" element={
-          <ProtectedRoute>
-            <VideoPlayer />
-          </ProtectedRoute>
-        } />
+        
         
         <Route path="/settings" element={
           <ProtectedRoute>
