@@ -174,63 +174,58 @@ const JobSeekers: React.FC = () => {
 
     setIsSubmitting(true);
 
-    setIsSubmitting(true);
-
     try {
-      const formData = new FormData();
-      formData.append('job_title', selectedJob.title);
-      formData.append('applicant_name', form.name);
-      formData.append('applicant_email', form.email);
-      formData.append('cover_letter', form.message || '');
-      formData.append('phone', form.phone || '');
+      // Create email content
+      const emailSubject = `Job Application: ${selectedJob.title} at ${selectedJob.company}`;
+      const emailBody = `
+New Job Application Received
 
-      if (form.resume) {
-        formData.append('resume', form.resume);
-      }
+Job Details:
+- Position: ${selectedJob.title}
+- Company: ${selectedJob.company}
+- Job Type: ${selectedJob.jobType}
+- Location: ${selectedJob.location}
+- Salary Range: ${selectedJob.salaryRange}
 
-      const response = await fetch(`${API_URL}/email/job-application`, {
-        method: 'POST',
-        body: formData,
+Applicant Details:
+- Name: ${form.name}
+- Email: ${form.email}
+- Phone: ${form.phone || 'Not provided'}
+- Cover Letter: ${form.message || 'Not provided'}
+
+Resume: ${form.resume ? form.resume.name : 'Not provided'}
+
+Application submitted on: ${new Date().toLocaleString()}
+    `.trim();
+
+      // Create mailto link with all the data
+      const mailtoLink = `mailto:info.pathmatch@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+      // Open default email client
+      window.open(mailtoLink, '_blank');
+
+      // Show success message
+      setShowSuccessMessage(true);
+
+      // Reset form
+      setForm({
+        name: '',
+        phone: '',
+        email: '',
+        message: '',
+        resume: null,
       });
-      console.log('Application response status:', response.status);
+      setAttachments([]);
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Application submitted successfully:', result);
+      // Auto-hide success message and close modal after 3 seconds
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setIsModalOpen(false);
+      }, 3000);
 
-        // Show success message
-        setShowSuccessMessage(true);
-
-        // Reset form
-        setForm({
-          name: '',
-          phone: '',
-          email: '',
-          message: '',
-          resume: null,
-        });
-        setAttachments([]);
-
-        // Auto-hide success message and close modal after 3 seconds
-        setTimeout(() => {
-          setShowSuccessMessage(false);
-          setIsModalOpen(false);
-        }, 3000);
-
-      } else {
-        let errorMessage = 'Failed to submit application';
-        try {
-          const error = await response.json();
-          errorMessage = error.message || errorMessage;
-        } catch (parseError) {
-          console.error('Failed to parse error response:', parseError);
-          errorMessage = `Server error: ${response.status}`;
-        }
-        alert(`Error submitting application: ${errorMessage}`);
-      }
     } catch (error) {
-      console.error('Error submitting application:', error);
-      alert('Network error: Unable to connect to server. Please check if the server is running.');
+      console.error('Error preparing application:', error);
+      alert('Error preparing application. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -710,13 +705,13 @@ const JobSeekers: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-green-800 mb-2">Application Submitted Successfully!</h3>
+                <h3 className="text-2xl font-bold text-green-800 mb-2">Application Prepared Successfully!</h3>
                 <p className="text-green-700 mb-4">
                   Thank you for applying to <strong>{selectedJob?.title}</strong> at <strong>{selectedJob?.company}</strong>.
                 </p>
                 <p className="text-green-600 text-sm">
-                  We've sent a confirmation email to <strong>{form.email}</strong>.
-                  Our team will review your application and get back to you soon.
+                  Your default email client should open with the application details.
+                  Please send the email to complete your application.
                 </p>
               </div>
               <div className="text-sm text-gray-500">
@@ -785,8 +780,8 @@ const JobSeekers: React.FC = () => {
                     type="submit"
                     disabled={isSubmitting}
                     className={`font-semibold px-8 py-3 rounded shadow transition-colors w-full max-w-xs ${isSubmitting
-                        ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                        : 'bg-red-700 text-white hover:bg-red-800'
+                      ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                      : 'bg-red-700 text-white hover:bg-red-800'
                       }`}
                   >
                     {isSubmitting ? (
