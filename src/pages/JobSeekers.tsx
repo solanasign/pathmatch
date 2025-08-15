@@ -4,6 +4,10 @@ import JobCard from "../components/JobCard"
 import JobDetailsModal from "../components/JobDetailsModal"
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../components/Footer'
+import emailjs from '@emailjs/browser';
+import dotenv from 'dotenv';
+
+
 
 const FlipModal = ({ isOpen, onClose, children, jobTitle, companyName }) => (
   <AnimatePresence>
@@ -175,61 +179,147 @@ const JobSeekers: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Create email content
-      const emailSubject = `Job Application: ${selectedJob.title} at ${selectedJob.company}`;
-      const emailBody = `
-New Job Application Received
+    const SERVICE_ID = "service_xk5ibup";
+    const TEMPLATE_ID = 'template_2ymymbn';
+    const PUBLIC_KEY = 'GW4-rMIMU3bdrrmSf';
 
-Job Details:
-- Position: ${selectedJob.title}
-- Company: ${selectedJob.company}
-- Job Type: ${selectedJob.jobType}
-- Location: ${selectedJob.location}
-- Salary Range: ${selectedJob.salaryRange}
-
-Applicant Details:
-- Name: ${form.name}
-- Email: ${form.email}
-- Phone: ${form.phone || 'Not provided'}
-- Cover Letter: ${form.message || 'Not provided'}
-
-Resume: ${form.resume ? form.resume.name : 'Not provided'}
-
-Application submitted on: ${new Date().toLocaleString()}
-    `.trim();
-
-      // Create mailto link with all the data
-      const mailtoLink = `mailto:info.pathmatch@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-
-      // Open default email client
-      window.open(mailtoLink, '_blank');
-
-      // Show success message
-      setShowSuccessMessage(true);
-
-      // Reset form
-      setForm({
-        name: '',
-        phone: '',
-        email: '',
-        message: '',
-        resume: null,
-      });
-      setAttachments([]);
-
-      // Auto-hide success message and close modal after 3 seconds
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-        setIsModalOpen(false);
-      }, 3000);
-
-    } catch (error) {
-      console.error('Error preparing application:', error);
-      alert('Error preparing application. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+    // Prepare template parameters for the main application email
+    let resumeContent = 'No resume attached';
+    let resumeFileName = 'No resume attached';
+    
+    if (form.resume) {
+      resumeFileName = form.resume.name;
+      // For text files, we can include content in email
+      if (form.resume.type === 'text/plain' || form.resume.name.endsWith('.txt')) {
+        const text = await form.resume.text();
+        resumeContent = `Resume Content:\n${text}`;
+      } else {
+        resumeContent = `Resume file: ${form.resume.name} (${form.resume.size} bytes)\nFile type: ${form.resume.type}\n\nNote: This is a binary file. Please contact the applicant to request the actual file.`;
+      }
     }
-  };
+
+    const templateParams = {
+      job_title: selectedJob.title,
+      company_name: selectedJob.company,
+      job_type: selectedJob.jobType,
+      job_location: selectedJob.location,
+      salary_range: selectedJob.salaryRange,
+      applicant_name: form.name,
+      applicant_email: form.email,
+      applicant_phone: form.phone || 'Not provided',
+      cover_letter: form.message || 'No cover letter provided',
+      resume_name: resumeFileName,
+      resume_content: resumeContent,
+      submitted_date: new Date().toLocaleString()
+    };
+
+    // Send main application email using EmailJS
+    const result = await emailjs.send(
+      SERVICE_ID,
+      TEMPLATE_ID,
+      templateParams,
+      PUBLIC_KEY
+    );
+
+    console.log('Main application email sent successfully:', result);
+
+    // Send auto-responder email to the applicant
+    await sendAutoResponder(form.email, form.name, selectedJob.title);
+
+    // Show success message
+    setShowSuccessMessage(true);
+    
+    // Reset form
+    setForm({
+      name: '',
+      phone: '',
+      email: '',
+      message: '',
+      resume: null,
+    });
+    setAttachments([]);
+    
+    // Auto-hide success message and close modal after 3 seconds
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+      setIsModalOpen(false);
+    }, 3000);
+    
+  } catch (error) {
+    console.error('Error sending application:', error);
+    alert('Error sending application. Please try again.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+// Function to convert file to base64
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result as string;
+      // Remove the data URL prefix to get just the base64 string
+      const base64 = result.split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = error => reject(error);
+  });
+};
+
+// Function to send auto-responder email
+const sendAutoResponder = async (applicantEmail: string, applicantName: string, jobTitle: string) => {
+  try {
+    const SERVICE_ID = "service_xk5ibup";
+    const AUTO_RESPONDER_TEMPLATE_ID = 'template_fad9yug'; 
+    const PUBLIC_KEY = 'GW4-rMIMU3bdrrmSf';
+
+    // Define responsibilities based on job title (you can customize this)
+    const getResponsibilities = (title: string) => {
+      const responsibilitiesMap: { [key: string]: string } = {
+        'Senior Software Engineer': 'developing scalable applications, mentoring junior developers, and contributing to architectural decisions',
+        'Marketing Manager': 'leading marketing initiatives, managing campaigns, and analyzing performance metrics',
+        'Customer Service Representative': 'providing excellent customer support and resolving inquiries efficiently',
+        'Frontend Developer': 'building responsive and interactive web applications',
+        'Backend Developer': 'developing robust server-side applications and APIs',
+        'Graphic Designer': 'creating visual content for digital and print media',
+        'Content Writer': 'creating engaging content for websites and blogs',
+        'Social Media Manager': 'managing social media presence and engagement',
+        'DevOps Engineer': 'building and maintaining scalable infrastructure',
+        'Data Analyst': 'analyzing data and providing insights for business decisions',
+        'Customer Service Associate': 'providing excellent customer support and resolving inquiries efficiently',
+        'Customer Service Coordinator': 'coordinating customer service activities and maintaining service quality standards',
+        'Customer Service Consultant': 'providing specialized customer support and consultation services',
+        'Customer Service Manager': 'managing customer service operations and driving customer satisfaction initiatives',
+        'Customer Service Analyst': 'analyzing customer service data and providing insights for service improvement'
+      };
+      
+      return responsibilitiesMap[title] || 'performing the duties associated with your role and contributing to team success';
+    };
+
+    const autoResponderParams = {
+      applicant_name: applicantName,
+      applicant_email: applicantEmail,
+      job_title: jobTitle,
+      responsibilities: getResponsibilities(jobTitle)
+    };
+
+    // Send auto-responder email
+    const autoResponderResult = await emailjs.send(
+      SERVICE_ID,
+      AUTO_RESPONDER_TEMPLATE_ID,
+      autoResponderParams,
+      PUBLIC_KEY
+    );
+
+    console.log('Auto-responder email sent successfully:', autoResponderResult);
+
+  } catch (error) {
+    console.error('Error sending auto-responder:', error);
+    // Don't show error to user as main application was successful
+  }
+};
 
 
 
