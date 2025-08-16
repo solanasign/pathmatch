@@ -17,7 +17,7 @@ const Employers: React.FC = () => {
         </p>
         <div className="cta-buttons flex flex-col sm:flex-row justify-center gap-4 mb-10">
           <Link
-            to="/job-seekers"
+            to="/careers"
             className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 text-center"
             role="button"
             tabIndex={0}
