@@ -22,7 +22,7 @@ function App() {
       {location.pathname !== '/auth' && <AnimatedLogo />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/job-seekers" element={<Jobseekers />} />
+        <Route path="/careers" element={<Jobseekers />} />
         <Route path="/employers" element={<Employers />} /> 
         <Route path="/chat" element={<Chat />} />
         <Route path="/about-us" element={<About />} />
