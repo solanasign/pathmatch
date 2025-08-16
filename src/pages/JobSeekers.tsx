@@ -919,9 +919,9 @@ const sendAutoResponder = async (applicantEmail: string, applicantName: string, 
         {/* Hero Section */}
         <div className="directory-hero bg-red-50 py-10">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-4">Job Seekers</h1>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-4">Careers</h1>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
-              Welcome to the Job Seekers section of PathMatch! - where your career journey begins. We're dedicated to transforming your job search into career success.
+              Welcome to the Careers section of PathMatch! - where your career journey begins. We're dedicated to transforming your job search into career success.
             </p>
             <div className="cta-buttons flex flex-col sm:flex-row justify-center gap-4">
               <div className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">Browse Jobs</div>
