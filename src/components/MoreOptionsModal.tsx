@@ -128,13 +128,13 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                     Home
                   </Link>
                   <Link
-                    to="/job-seekers"
+                    to="/careers"
                     className={`block text-2xl font-bold transition-colors ${
                       isActiveLink('/job-seekers') ? 'text-red-400' : 'text-white hover:text-red-500'
                     }`}
                     onClick={onClose}
                   >
-                    Job Seekers
+                   Careers 
                   </Link>
                   <Link
                     to="/about-us"
