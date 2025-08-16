@@ -134,7 +134,7 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                     }`}
                     onClick={onClose}
                   >
-                   Careers 
+                   Job Seekers 
                   </Link>
                   <Link
                     to="/about-us"
@@ -211,7 +211,7 @@ const MobileMenuModal: React.FC<MobileMenuModalProps> = ({ isOpen, onClose, curr
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-3">
                       <Link
-                        to="/job-seekers"
+                        to="/careers"
                         className="block text-white hover:text-gray-300 transition-colors"
                         onClick={onClose}
                       >
