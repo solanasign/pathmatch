@@ -60,7 +60,7 @@ const Home = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
         <Link
-          to="/job-seekers"
+          to="/careers"
               className="bg-red-400 hover:bg-red-500 text-white font-bold px-8 py-4 rounded-lg shadow transition-colors text-lg flex items-center justify-center"
             >
               Find Your Dream Job <span className="ml-2">→</span>
@@ -157,7 +157,7 @@ const Home = () => {
 
           {/* Explore All Services Button */}
           <div className="text-center">
-            <Link to="/job-seekers" className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-colors text-lg">
+            <Link to="/careers" className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-colors text-lg">
               Explore All Jobs <span className="ml-2">→</span>
             </Link>
           </div>
