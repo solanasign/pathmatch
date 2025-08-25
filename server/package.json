@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
@@ -11,7 +11,7 @@
     "send-report": "ts-node src/scripts/send-report.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "solanasign",
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.54.0",
